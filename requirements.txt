@@ -16,7 +16,7 @@ SQLAlchemy
 sqlalchemy-migrate
 sqlparse
 Tempita
-Werkzeug
+Werkzeug>=0.14
 wheel
 WTForms
 python-dotenv
