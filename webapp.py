@@ -2,10 +2,13 @@ from flask import Flask, redirect, url_for, session, request, jsonify, render_te
 from flask_apscheduler import APScheduler
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask_oauthlib.client import OAuth
+from bson.objectid import ObjectId
 
 import pprint
 import os
 import time
+import pymongo
+import sys
  
 app = Flask(__name__)
 
@@ -30,6 +33,13 @@ github = oauth.remote_app(
     authorize_url='https://github.com/login/oauth/authorize' #URL for github's OAuth login
 )
 
+#Connect to database
+url = os.environ["MONGO_CONNECTION_STRING"]
+client = pymongo.MongoClient(url)
+db = client[os.environ["MONGO_DBNAME"]]
+collection = db['posts'] #TODO: put the name of the collection here
+
+print("connected to db")
 
 #context processors run before templates are rendered and add variable(s) to the template's context
 #context processors must return a dictionary 
