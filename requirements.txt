@@ -22,3 +22,4 @@ WTForms
 python-dotenv
 app
 Flask-APScheduler
+Flask-OAuthlib
