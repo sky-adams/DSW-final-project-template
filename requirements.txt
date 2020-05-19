@@ -23,3 +23,7 @@ python-dotenv
 app
 Flask-APScheduler
 Flask-OAuthlib
+bson
+Flask-PyMongo
+pymongo
+dnspython
