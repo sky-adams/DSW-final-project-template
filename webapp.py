@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for, session, request, jsonify, render_template, flash
+from flask import Flask, redirect, url_for, session, request, jsonify, render_template, flash, Markup
 from flask_apscheduler import APScheduler
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask_oauthlib.client import OAuth
@@ -82,7 +82,15 @@ def authorized():
             flash('Unable to login, please try again.', 'error')
     return redirect('/')
 
-
+@app.route('/news')
+def roboticsNews():
+    return render_template('news.html', articles=get_articles())
+ 
+def get_articles(): #START HERE!!!!!!!!!!!!!!!!!!!!!!!!!!
+    toReturn='' #add different components or articles here
+    for articles in collection.find():
+        #kjhkuhk
+   
 @app.route('/page1')
 def renderPage1():
     if 'user_data' in session:
