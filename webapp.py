@@ -86,10 +86,12 @@ def authorized():
 def roboticsNews():
     return render_template('news.html', articles=get_articles())
  
-def get_articles(): #START HERE!!!!!!!!!!!!!!!!!!!!!!!!!!
-    toReturn='' #add different components or articles here
+def get_articles(): #returns code to insert articles into html page
+    toReturn=''
     for articles in collection.find():
-        #kjhkuhk
+        toReturn+=Markup("<h2>"+ articles[title] +"</h2>")
+        toReturn+=Markup("<p>"+ articles[content] +"</p>")
+    return toReturn
    
 @app.route('/page1')
 def renderPage1():
