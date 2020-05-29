@@ -12,8 +12,6 @@ import sys
  
 app = Flask(__name__)
 
-validUsers = ['jocelyngallardo', 'LucaCC', 'sky-adams', 'kedehlsen']
-
 #initialize scheduler with your preferred timezone
 scheduler = BackgroundScheduler({'apscheduler.timezone': 'America/Los_Angeles'})
 scheduler.start()
@@ -42,6 +40,8 @@ db = client[os.environ["MONGO_DBNAME"]]
 collection = db['news']
 
 print("connected to db")
+
+validUsers=['jocelyngallardo', 'LucaCC', 'kedehlsen', 'sky-adams']
 
 #context processors run before templates are rendered and add variable(s) to the template's context
 #context processors must return a dictionary 
@@ -73,18 +73,15 @@ def authorized():
         flash('Access denied: reason=' + request.args['error'] + ' error=' + request.args['error_description'] + ' full=' + pprint.pformat(request.args), 'error')      
     else:
         try:
-            '''session['github_token'] = (resp['access_token'], '') #save the token to prove that the user logged in
-            session['user_data']=github.get('user').data
-            #pprint.pprint(vars(github['/email']))
-            #pprint.pprint(vars(github['api/2/accounts/profile/']))
-            flash('You were successfully logged in as ' + session['user_data']['login'] + '.')'''
-            if session['user_data']['login'] in validUsers:
-				session['github_token']=(resp['access_token'],'') #save the token to prove the user logged in
-                session['user_data']=github.get('user').data
-                flash('You were successfully logged in as ' + session['user_data']['login'] + '.')
-            else:
+			if session['user_data']['login'] in validUsers:
+				session['github_token'] = (resp['access_token'], '') #save the token to prove that the user logged in
+				session['user_data']=github.get('user').data
+				#pprint.pprint(vars(github['/email']))
+				#pprint.pprint(vars(github['api/2/accounts/profile/']))
+				flash('You were successfully logged in as ' + session['user_data']['login'] + '.')
+		    else:
 				session.clear()
-                flash('Not an admin, please contact club officials for access', 'error')
+				flash('Not an admin. Contact club officials for access.', 'error')
         except Exception as inst:
             session.clear()
             print(inst)
