@@ -105,7 +105,7 @@ def get_articles(): #returns code to insert articles into html page
 		toReturn=Markup("<h2>"+ articles['title'] +"</h2>") + toReturn
 	return toReturn
 
-@app.route('/articleAdded', method=['POST'])
+@app.route('/articleAdded', methods=['GET','POST'])
 def article_added():
 	db.data.insert_one({"title":request.form['articleTitle'], "content":request.form['articleText']})
 	return redirect(url_for('roboticsNews'))
