@@ -17,7 +17,7 @@ scheduler = BackgroundScheduler({'apscheduler.timezone': 'America/Los_Angeles'})
 scheduler.start()
  
 app.secret_key = os.environ['SECRET_KEY'] #used to sign session cookies
-'''oauth = OAuth(app)
+oauth = OAuth(app)
 oauth.init_app(app) #initialize the app to be able to make requests for user information
 
 #Set up GitHub as OAuth provider
@@ -31,7 +31,7 @@ github = oauth.remote_app(
     access_token_method='POST',
     access_token_url='https://github.com/login/oauth/access_token',  
     authorize_url='https://github.com/login/oauth/authorize' #URL for github's OAuth login
-)'''
+)
 
 #Connect to database
 url = os.environ["MONGO_CONNECTION_STRING"]
@@ -107,9 +107,9 @@ def renderPage2():
     return render_template('page2.html')
 
 #the tokengetter is automatically called to check who is logged in.
-'''@github.tokengetter
+@github.tokengetter
 def get_github_oauth_token():
-    return session['github_token']'''
+    return session['github_token']
 
 
 if __name__ == '__main__':
