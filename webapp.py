@@ -79,11 +79,11 @@ def authorized():
             #pprint.pprint(vars(github['api/2/accounts/profile/']))
             flash('You were successfully logged in as ' + session['user_data']['login'] + '.')'''
             if session['user_data']['login'] in validUsers:
-	        session['github_token'] = (resp['access_token'], '') #save the token to prove that the user logged in
+	    		session['github_token'] = (resp['access_token'], '') #save the token to prove that the user logged in
                 session['user_data']=github.get('user').data
                 flash('You were successfully logged in as ' + session['user_data']['login'] + '.')
             else:
-	            session.clear()
+	        	session.clear()
                 flash('Not an admin, please contact club officials for access', 'error')
         except Exception as inst:
             session.clear()
