@@ -75,8 +75,11 @@ def authorized():
 		session.clear()
 		flash('Access denied: reason=' + request.args['error'] + ' error=' + request.args['error_description'] + ' full=' + pprint.pformat(request.args), 'error')			
 	else:
+		print('got to else')
 		try:
+			print('got to try')
 			if session['user_data']['login'] in validUsers:
+				print('got to if statement')
 				session['github_token'] = (resp['access_token'], '') #save the token to prove that the user logged in
 				session['user_data']=github.get('user').data
 				#pprint.pprint(vars(github['/email']))
