@@ -12,7 +12,7 @@ import sys
  
 app = Flask(__name__)
 
-validUsers = ['JoyP321', 'jocelyngallardo', 'LucaCC', 'sky-adams', 'kedehlsen']
+validUsers = ['jocelyngallardo', 'LucaCC', 'sky-adams', 'kedehlsen']
 
 #initialize scheduler with your preferred timezone
 scheduler = BackgroundScheduler({'apscheduler.timezone': 'America/Los_Angeles'})
