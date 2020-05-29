@@ -7,5 +7,17 @@
   <h1>News</h1>
 
   {{articles}}
+  
+  {% if 'user_data' in session %}
+    <form action = '/articleAdded', method='POST'>
+      <label for="fname">Article Title:</label>
+      <br>
+      <input type="text" name="articleTitle">
+      <label for="fname">Article Text:</label>
+      <br>
+      <input type="text" name="articleText">
+      <input type='submit' value="Submit">
+    </form>
+  {% endif %}
 
 {% endblock %}
