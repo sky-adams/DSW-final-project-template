@@ -3,10 +3,13 @@
     <div class="container-fluid">
       <ul class="navbar-nav">
         <li class="nav-item">
-	  <a class="nav-link active" href="/page1">Page 1</a>
+	  <a {% if active_page == "home" %} class="nav-link active"{% else %}class="nav-link"{% endif %} href="/">Home</a>
         </li>
         <li class="nav-item">
-	  <a class="nav-link" href="/page2">Page 2</a>
+	  <a {% if active_page == "page1" %} class="nav-link active"{% else %}class="nav-link"{% endif %} href="/page1">Page 1</a>
+        </li>
+        <li class="nav-item">
+	  <a {% if active_page == "page2" %} class="nav-link active"{% else %}class="nav-link"{% endif %} href="/page2">Page 2</a>
         </li>
       </ul>
       <ul class="navbar-nav">
