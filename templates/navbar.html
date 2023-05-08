@@ -5,12 +5,14 @@
         <li class="nav-item">
 	  <a {% if active_page == "home" %} class="nav-link active"{% else %}class="nav-link"{% endif %} href="/">Home</a>
         </li>
-        <li class="nav-item">
-	  <a {% if active_page == "page1" %} class="nav-link active"{% else %}class="nav-link"{% endif %} href="/page1">Page 1</a>
+		<li class="nav-item">
+	  <a {% if active_page == "play" %} class="nav-link active"{% else %}class="nav-link"{% endif %} href="/game">Play!</a>
         </li>
+		{% if logged_in %}
         <li class="nav-item">
-	  <a {% if active_page == "page2" %} class="nav-link active"{% else %}class="nav-link"{% endif %} href="/page2">Page 2</a>
+	  <a {% if active_page == "profile" %} class="nav-link active"{% else %}class="nav-link"{% endif %} href="/profile">Profile</a>
         </li>
+		{% endif %}
       </ul>
       <ul class="navbar-nav">
     	{% if logged_in %}

@@ -55,7 +55,7 @@ def home():
 #redirect to GitHub's OAuth page and confirm callback URL
 @app.route('/login')
 def login():   
-    return github.authorize(callback=url_for('authorized', _external=True, _scheme='https')) #callback URL must match the pre-configured callback URL
+    return github.authorize(callback=url_for('authorized', _external=True, _scheme='http')) #callback URL must match the pre-configured callback URL
 
 @app.route('/logout')
 def logout():
@@ -83,17 +83,17 @@ def authorized():
     return redirect('/')
 
 
-@app.route('/page1')
-def renderPage1():
+@app.route('/profile')
+def renderProfile():
     if 'user_data' in session:
         user_data_pprint = pprint.pformat(session['user_data'])#format the user data nicely
     else:
         user_data_pprint = '';
-    return render_template('page1.html',dump_user_data=user_data_pprint)
+    return render_template('profile.html',dump_user_data=user_data_pprint)
 
-@app.route('/page2')
-def renderPage2():
-    return render_template('page2.html')
+@app.route('/game')
+def renderGame():
+    return render_template('game.html')
 
 #the tokengetter is automatically called to check who is logged in.
 @github.tokengetter
