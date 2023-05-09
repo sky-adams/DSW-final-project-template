@@ -7,7 +7,6 @@ itsdangerous
 Jinja2
 lxml
 MarkupSafe
-migrate
 pbr
 Pillow
 PyGithub
@@ -21,7 +20,7 @@ wheel
 WTForms
 python-dotenv
 app
-Flask-APScheduler
+Flask_APScheduler
 Flask-OAuthlib
 bson
 Flask-PyMongo
