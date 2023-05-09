@@ -11,6 +11,7 @@ import pymongo
 import sys
  
 app = Flask(__name__)
+app.debug = True
 
 #initialize scheduler with your preferred timezone
 scheduler = BackgroundScheduler({'apscheduler.timezone': 'America/Los_Angeles'})
@@ -37,7 +38,7 @@ github = oauth.remote_app(
 url = os.environ["MONGO_CONNECTION_STRING"]
 client = pymongo.MongoClient(url)
 db = client[os.environ["MONGO_DBNAME"]]
-collection = db['posts'] #TODO: put the name of the collection here
+collection = db['Profiles'] #TODO: put the name of the collection here
 
 print("connected to db")
 
@@ -73,9 +74,16 @@ def authorized():
         try:
             session['github_token'] = (resp['access_token'], '') #save the token to prove that the user logged in
             session['user_data']=github.get('user').data
+            user = session['user_data']['login']
             #pprint.pprint(vars(github['/email']))
             #pprint.pprint(vars(github['api/2/accounts/profile/']))
-            flash('You were successfully logged in as ' + session['user_data']['login'] + '.')
+            mydoc = collection.find_one({'User': user})
+            if mydoc == None:
+                doc = {"User": user, "Best Time": "100:00:00", "Wins": 0, "Loses": 0, "Achievements": ['Signed Up!']}
+                collection.insert_one(doc)
+            else:
+                print('user already signed up')
+            flash('You were successfully logged in as ' + user + '.')
         except Exception as inst:
             session.clear()
             print(inst)
