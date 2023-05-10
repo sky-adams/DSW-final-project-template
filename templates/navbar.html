@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-sm bg-light">
+<nav class="navbar navbar-expand-sm bg-success navbar-dark">
 
 	<div class="container-fluid">
 		<ul class="navbar-nav">
@@ -6,21 +6,20 @@
 			<li class="nav-item">
 				<a {% if active_page == "play" %} class="nav-link active"{% else %}class="nav-link"{% endif %} href="/game">Play!</a>
 			</li>
-			<li class="nav-item">
-				<a {% if active_page == "profile" %} class="nav-link active"{% else %}class="nav-link"{% endif %} href="/profile">Profile</a
-			</li>
 		</ul>
 			
 		<ul class="nav navbar-nav justify-content-end">
 			{% if logged_in %}
-			<li class="navbar-text">Github userid: {{ session['user_data']['login']}}</li>
-			<li class="navbar-text text-light">.....<li>
+			<li class="nav-item">
+				<a class="nav-link active" href = "/profile">Github userid: {{ session['user_data']['login']}}</a>
+			</li>
+			<li class="navbar-text text-success">.....<li>
 			{% endif %}
 			<li class="nav-item">
 				{% if logged_in %}
-				<a class="nav-link btn btn-info nb" href="/logout">Logout</a>
+				<a class="nav-link btn btn-light nb" href="/logout">Logout</a>
 				{% else %}
-				<a class="nav-link btn btn-info nb" href="/login">Login</a>
+				<a class="nav-link btn btn-light nb" href="/login">Login</a>
 				{% endif %}
 			</li>
 		</ul>

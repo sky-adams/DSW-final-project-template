@@ -94,10 +94,17 @@ def authorized():
 @app.route('/profile')
 def renderProfile():
     if 'user_data' in session:
-        user_data_pprint = pprint.pformat(session['user_data'])#format the user data nicely
-    else:
-        user_data_pprint = '';
-    return render_template('profile.html',dump_user_data=user_data_pprint)
+        pfp = session['user_data']['avatar_url']
+        user = session['user_data']['login']
+        alt = user + "'s profile picture"
+        for doc in collection.find({"User": user}):
+            time = doc["Best Time"]
+            wins = doc["Wins"]
+            loses = doc["Loses"]
+            achieve = doc["Achievements"]
+        if time == "100:00:00":
+            time = "None"
+    return render_template('profile.html', pfp = pfp, alt = str(alt), user = user, time = time, wins = wins, loses = loses, achieve = achieve)
 
 @app.route('/game')
 def renderGame():
