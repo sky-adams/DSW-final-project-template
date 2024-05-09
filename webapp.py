@@ -1,4 +1,5 @@
 from flask import Flask, redirect, url_for, session, request, jsonify, render_template, flash
+from markupsafe import Markup
 from flask_apscheduler import APScheduler
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask_oauthlib.client import OAuth
@@ -12,10 +13,15 @@ import sys
  
 app = Flask(__name__)
 
+#uncomment the code below to be able to schedule background tasks
 #initialize scheduler with your preferred timezone
-scheduler = BackgroundScheduler({'apscheduler.timezone': 'America/Los_Angeles'})
-scheduler.start()
- 
+#scheduler = BackgroundScheduler({'apscheduler.timezone': 'America/Los_Angeles'})
+#scheduler.start()
+
+
+app.debug = False #Change this to False for production
+#os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1' #Remove once done debugging
+
 app.secret_key = os.environ['SECRET_KEY'] #used to sign session cookies
 oauth = OAuth(app)
 oauth.init_app(app) #initialize the app to be able to make requests for user information
@@ -39,7 +45,12 @@ client = pymongo.MongoClient(url)
 db = client[os.environ["MONGO_DBNAME"]]
 collection = db['posts'] #TODO: put the name of the collection here
 
-print("connected to db")
+# Send a ping to confirm a successful connection
+try:
+    client.admin.command('ping')
+    print("Pinged your deployment. You successfully connected to MongoDB!")
+except Exception as e:
+    print(e)
 
 #context processors run before templates are rendered and add variable(s) to the template's context
 #context processors must return a dictionary 
@@ -73,14 +84,12 @@ def authorized():
         try:
             session['github_token'] = (resp['access_token'], '') #save the token to prove that the user logged in
             session['user_data']=github.get('user').data
-            #pprint.pprint(vars(github['/email']))
-            #pprint.pprint(vars(github['api/2/accounts/profile/']))
-            flash('You were successfully logged in as ' + session['user_data']['login'] + '.')
+            message = 'You were successfully logged in as ' + session['user_data']['login'] + '.'
         except Exception as inst:
             session.clear()
             print(inst)
-            flash('Unable to login, please try again.', 'error')
-    return redirect('/')
+            message = 'Unable to login, please try again.', 'error'
+    return render_template('message.html', message=message)
 
 
 @app.route('/page1')
