@@ -13,12 +13,6 @@ import sys
  
 app = Flask(__name__)
 
-#uncomment the code below to be able to schedule background tasks
-#initialize scheduler with your preferred timezone
-#scheduler = BackgroundScheduler({'apscheduler.timezone': 'America/Los_Angeles'})
-#scheduler.start()
-
-
 app.debug = False #Change this to False for production
 #os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1' #Remove once done debugging
 
