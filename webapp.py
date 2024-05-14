@@ -104,6 +104,26 @@ def renderPage2():
 def get_github_oauth_token():
     return session['github_token']
 
+@app.route('/Account')
+def renderAccountPage():
+    if 'user_data' in session:
+        if 'character_data' in session:
+            gitHubID = session['user_data']['login']
+            characterData=loadCharacterData(gitHubID)
+            return render_template('account.html',character_data=characterData)
+    else
+        characterData=createCharacterData()
+        return render_template('account.html',character_data=characterData)
+    message = 'Please Log in.'
+    return render_template('message.html', message=message)
 
+def createCharacterData(gitHubID):
+    doc = {
+        "GitHubID": gitHubID,
+        "Name": "User1",
+        "Class": "Mage",
+        "Level": 10
+    }
+    collection.insert_one(doc)
 if __name__ == '__main__':
     app.run()
