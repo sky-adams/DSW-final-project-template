@@ -129,6 +129,11 @@ def createCharacterData(gitHubID):
     characterData = doc
     numberOfDocs = collection.count_documents({})
     print(numberOfDocs)
+    session["character_data"] = "True"
+    return(characterData)
+    
+def loadCharacterData(gitHubID):
+    characterData = collection.find_one({"GitHubID": gitHubID})
     return(characterData)
 if __name__ == '__main__':
     app.run()
