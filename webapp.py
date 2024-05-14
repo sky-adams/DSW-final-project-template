@@ -64,7 +64,10 @@ def login():
 
 @app.route('/logout')
 def logout():
-    session.clear()
+    if 'character_data' in session:
+        clearCookies()
+    else:
+        session.clear()
     flash('You were logged out.')
     return redirect('/')
 
@@ -135,5 +138,10 @@ def createCharacterData(gitHubID):
 def loadCharacterData(gitHubID):
     characterData = collection.find_one({"GitHubID": gitHubID})
     return(characterData)
+    
+def clearCookies():
+    session.pop('user_data', None)
+    session.pop('github_token', None)
+    session.pop('access_token', None)
 if __name__ == '__main__':
     app.run()
