@@ -8,13 +8,14 @@
 
   <h1>This is the Summary page</h1>
 
-<ul>
- <li> text {{ session['sumInput'] }}</i> </li>
-</ul>
+<p></p>
+<form action={{ url_for("renderSummaryPage") }} method="POST">
+  label<br>
+  <input type="text" name="sumInput">
+  <input type="submit" class="submit" value="Submit">
+ </form> 
 
-<form action={{ url_for("renderSummaryInputPage") }}  method="POST">
-	<input type="submit" class="submit" value="Submit">
-</form>
+
   <p>if user is admin
   , text input field, 
    button redirect?

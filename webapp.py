@@ -38,7 +38,7 @@ url = os.environ["MONGO_CONNECTION_STRING"]
 client = pymongo.MongoClient(url)
 db = client[os.environ["MONGO_DBNAME"]]
 collection = db['Characters'] #TODO: put the name of the collection here
-
+posts = db['posts']
 # Send a ping to confirm a successful connection
 try:
     client.admin.command('ping')
@@ -102,6 +102,32 @@ def renderPage1():
 @app.route('/page2')
 def renderPage2():
     return render_template('page2.html')
+    
+    
+@app.route('/Summary',methods=['GET','POST'])
+def renderSummaryPage():
+    for doc in posts.find()
+        sumInput = Markup()
+    
+    return render_template('summary.html')
+   
+@app.route('/SummaryInput',methods=['GET','POST'])
+def renderSummaryInputPage():
+    sumInput =request.form['sumInput']
+    updateMessage = updateSummary(sumInput)
+    return render_template('summaryInput.html', )
+
+
+
+def updateSummary(updateMessage):
+    doc = {
+        "Update": updateMessage
+    }
+    posts.insert_one(doc)
+    sumUpdate = doc
+    numberOfDocs = posts.count_documents({})
+    print(numberOfDocs)
+    return(sumUpdate)
 
 #the tokengetter is automatically called to check who is logged in.
 @github.tokengetter
