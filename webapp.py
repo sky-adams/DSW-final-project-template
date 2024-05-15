@@ -120,8 +120,9 @@ def renderAccountPage():
             gitHubID = session['user_data']['login']
             characterData=createCharacterData(gitHubID)
             return render_template('account.html',character_data=characterData)
-    message = 'Please Log in.'
-    return render_template('message.html', message=message)
+    else:
+        message = 'Please Log in.'
+        return render_template('message.html', message=message)
 
 def createCharacterData(gitHubID):
     doc = {
