@@ -37,7 +37,7 @@ github = oauth.remote_app(
 url = os.environ["MONGO_CONNECTION_STRING"]
 client = pymongo.MongoClient(url)
 db = client[os.environ["MONGO_DBNAME"]]
-collection = db['Characters'] #TODO: put the name of the collection here
+characters = db['Characters'] #TODO: put the name of the collection here
 
 # Send a ping to confirm a successful connection
 try:
@@ -114,7 +114,7 @@ def renderAccountPage():
         
         gitHubID = session['user_data']['login']
         
-        if collection.find_one({"GitHubID": gitHubID}):
+        if characters.find_one({"GitHubID": gitHubID}):
             gitHubID = session['user_data']['login']
             characterData=loadCharacterData(gitHubID)
             return render_template('account.html',character_data=characterData)
@@ -150,18 +150,18 @@ def createCharacterData(gitHubID, Name, Class, Level):
         "Class": Class,
         "Level": Level
     }
-    collection.insert_one(doc)
+    characters.insert_one(doc)
     characterData = doc
     return(characterData)
     
 def loadCharacterData(gitHubID):
-    characterData = collection.find_one({"GitHubID": gitHubID})
+    characterData = characters.find_one({"GitHubID": gitHubID})
     return(characterData)
     
 def editCharacter(gitHubID, Level):
     query = collection.find_one({"GitHubID": gitHubID})
     changes = {'$set': {"Level":Level}}
-    collection.update_one(query, changes)
+    characters.update_one(query, changes)
 
     characterData = query
     return(characterData)
