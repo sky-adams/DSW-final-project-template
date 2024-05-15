@@ -119,8 +119,6 @@ def renderAccountPage():
             characterData=loadCharacterData(gitHubID)
             return render_template('account.html',character_data=characterData)
         else:
-            #gitHubID = session['user_data']['login']
-            #characterData=createCharacterData(gitHubID)
             return render_template('account.html')
     else:
         message = 'Please Log in.'
@@ -136,7 +134,14 @@ def renderAccountCreation():
     characterData=createCharacterData(gitHubID, Name, Class, Level)
     
     return render_template('account.html',character_data=characterData) 
+   
+@app.route('/updateCharacter', methods=['GET', 'POST'])
+def renderUpdateCharacter():  
+    gitHubID = session['user_data']['login']
+    Level=request.form['level']
+    characterData=editCharacter(gitHubID, Level)
     
+    return redirect('/Account')
 
 def createCharacterData(gitHubID, Name, Class, Level):
     doc = {
@@ -147,18 +152,18 @@ def createCharacterData(gitHubID, Name, Class, Level):
     }
     collection.insert_one(doc)
     characterData = doc
-    #numberOfDocs = collection.count_documents({})
-    #print(numberOfDocs)
-    #session["character_data"] = "True"
     return(characterData)
     
 def loadCharacterData(gitHubID):
     characterData = collection.find_one({"GitHubID": gitHubID})
     return(characterData)
     
-#def clearCookies():
-    #session.pop('user_data', None)
-    #session.pop('github_token', None)
-    #session.pop('access_token', None)
+def editCharacter(gitHubID, Level):
+    query = collection.find_one({"GitHubID": gitHubID})
+    changes = {'$set': {"Level":Level}}
+    collection.update_one(query, changes)
+
+    characterData = query
+    return(characterData)
 if __name__ == '__main__':
     app.run()
