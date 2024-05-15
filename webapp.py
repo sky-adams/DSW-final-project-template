@@ -55,6 +55,7 @@ def inject_logged_in():
 
 @app.route('/')
 def home():
+    #session.clear()
     return render_template('home.html')
 
 #redirect to GitHub's OAuth page and confirm callback URL
@@ -64,10 +65,10 @@ def login():
 
 @app.route('/logout')
 def logout():
-    if 'character_data' in session:
-        clearCookies()
-    else:
-        session.clear()
+    #if 'character_data' in session:
+        #clearCookies()
+    #else:
+    session.clear()
     flash('You were logged out.')
     return redirect('/')
 
@@ -110,7 +111,8 @@ def get_github_oauth_token():
 @app.route('/Account')
 def renderAccountPage():
     if 'user_data' in session:
-        if 'character_data' in session:
+        gitHubID = session['user_data']['login']
+        if collection.find_one({"GitHubID": gitHubID}):
             gitHubID = session['user_data']['login']
             characterData=loadCharacterData(gitHubID)
             return render_template('account.html',character_data=characterData)
@@ -139,9 +141,9 @@ def loadCharacterData(gitHubID):
     characterData = collection.find_one({"GitHubID": gitHubID})
     return(characterData)
     
-def clearCookies():
-    session.pop('user_data', None)
-    session.pop('github_token', None)
-    session.pop('access_token', None)
+#def clearCookies():
+    #session.pop('user_data', None)
+    #session.pop('github_token', None)
+    #session.pop('access_token', None)
 if __name__ == '__main__':
     app.run()
