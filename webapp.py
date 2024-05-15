@@ -111,31 +111,45 @@ def get_github_oauth_token():
 @app.route('/Account')
 def renderAccountPage():
     if 'user_data' in session:
+        
         gitHubID = session['user_data']['login']
+        
         if collection.find_one({"GitHubID": gitHubID}):
             gitHubID = session['user_data']['login']
             characterData=loadCharacterData(gitHubID)
             return render_template('account.html',character_data=characterData)
         else:
-            gitHubID = session['user_data']['login']
-            characterData=createCharacterData(gitHubID)
-            return render_template('account.html',character_data=characterData)
+            #gitHubID = session['user_data']['login']
+            #characterData=createCharacterData(gitHubID)
+            return render_template('account.html')
     else:
         message = 'Please Log in.'
         return render_template('message.html', message=message)
 
-def createCharacterData(gitHubID):
+@app.route('/createAccount', methods=['GET', 'POST'])
+def renderAccountCreation():
+    gitHubID = session['user_data']['login']
+    Name=request.form['name']
+    Class=request.form['class']
+    Level=request.form['level']
+    
+    characterData=createCharacterData(gitHubID, Name, Class, Level)
+    
+    return render_template('account.html',character_data=characterData) 
+    
+
+def createCharacterData(gitHubID, Name, Class, Level):
     doc = {
         "GitHubID": gitHubID,
-        "Name": "User1",
-        "Class": "Mage",
-        "Level": 10
+        "Name": Name,
+        "Class": Class,
+        "Level": Level
     }
     collection.insert_one(doc)
     characterData = doc
-    numberOfDocs = collection.count_documents({})
-    print(numberOfDocs)
-    session["character_data"] = "True"
+    #numberOfDocs = collection.count_documents({})
+    #print(numberOfDocs)
+    #session["character_data"] = "True"
     return(characterData)
     
 def loadCharacterData(gitHubID):
