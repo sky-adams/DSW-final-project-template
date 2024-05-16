@@ -106,10 +106,9 @@ def renderPage2():
     
 @app.route('/Summary',methods=['GET','POST'])
 def renderSummaryPage():
-    for doc in posts.find()
-        sumInput = Markup()
-    
-    return render_template('summary.html')
+    for doc in posts.find():
+        sumInput = sumInput + Markup("<option value=\"" +str(doc) + "\">" + str(doc) + "</option>")   
+    return render_template('summary.html', sum_input=sumInput)
    
 @app.route('/SummaryInput',methods=['GET','POST'])
 def renderSummaryInputPage():
