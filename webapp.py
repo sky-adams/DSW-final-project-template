@@ -13,7 +13,7 @@ import sys
  
 app = Flask(__name__)
 
-app.debug = False #Change this to False for production
+app.debug = True #Change this to False for production
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1' #Remove once done debugging
 
 app.secret_key = os.environ['SECRET_KEY'] #used to sign session cookies
@@ -106,15 +106,28 @@ def renderPage2():
     
 @app.route('/Summary',methods=['GET','POST'])
 def renderSummaryPage():
-    for doc in posts.find():
-        sumInput = sumInput + Markup("<option value=\"" +str(doc) + "\">" + str(doc) + "</option>")   
-    return render_template('summary.html', sum_input=sumInput)
+    sumInput = getPosts()
+    print(sumInput)
+    return render_template('summary.html', sum_Input=sumInput)
    
+def getPosts():
+    sumInput = ""
+    
+    for doc in posts.find():
+        sumInput = sumInput + Markup("<li>" + str(doc["Update"]) + "</li>")   
+    
+    print(sumInput)
+    return(sumInput)
+
 @app.route('/SummaryInput',methods=['GET','POST'])
 def renderSummaryInputPage():
-    sumInput =request.form['sumInput']
+    return render_template('summaryInput.html')
+    
+@app.route('/Submit',methods=['GET','POST'])
+def submitSummeryInput():
+    sumInput = request.form['sumInput']
     updateMessage = updateSummary(sumInput)
-    return render_template('summaryInput.html', )
+    return redirect('/Summary')
 
 
 
