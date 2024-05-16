@@ -114,7 +114,7 @@ def getPosts():
     sumInput = ""
     
     for doc in posts.find():
-        sumInput = sumInput + Markup("<li>" + str(doc["Update"]) + "</li>")   
+        sumInput = sumInput + Markup("<li>" + "<h3>" + str(doc["Head"]) + "</h3>" + "<p>" + str(doc["Body"]) + "</p>" + "</li>")   
     
     print(sumInput)
     return(sumInput)
@@ -125,20 +125,20 @@ def renderSummaryInputPage():
     
 @app.route('/Submit',methods=['GET','POST'])
 def submitSummeryInput():
-    sumInput = request.form['sumInput']
-    updateMessage = updateSummary(sumInput)
+    sumInput = request.form['bodyInput']
+    headInput = request.form['headInput']
+    updateMessage = updateSummary(headInput, sumInput)
     return redirect('/Summary')
 
 
 
-def updateSummary(updateMessage):
+def updateSummary(head, body):
     doc = {
-        "Update": updateMessage
+        "Head": head,
+        "Body": body
     }
     posts.insert_one(doc)
     sumUpdate = doc
-    numberOfDocs = posts.count_documents({})
-    print(numberOfDocs)
     return(sumUpdate)
 
 #the tokengetter is automatically called to check who is logged in.
