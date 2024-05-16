@@ -159,7 +159,7 @@ def loadCharacterData(gitHubID):
     return(characterData)
     
 def editCharacter(gitHubID, Level):
-    query = collection.find_one({"GitHubID": gitHubID})
+    query = characters.find_one({"GitHubID": gitHubID})
     changes = {'$set': {"Level":Level}}
     characters.update_one(query, changes)
 
