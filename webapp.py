@@ -106,9 +106,10 @@ def renderPage2():
     
 @app.route('/Summary',methods=['GET','POST'])
 def renderSummaryPage():
+    gitHubID = session['user_data']['login']
     sumInput = getPosts()
-    print(sumInput)
-    return render_template('summary.html', sum_Input=sumInput)
+    isDM = loadCharacterData(gitHubID)["DMaster"]
+    return render_template('summary.html', sum_Input=sumInput,is_DM=isDM)
    
 def getPosts():
     sumInput = ""
@@ -121,6 +122,7 @@ def getPosts():
 
 @app.route('/SummaryInput',methods=['GET','POST'])
 def renderSummaryInputPage():
+
     return render_template('summaryInput.html')
     
 @app.route('/Submit',methods=['GET','POST'])
