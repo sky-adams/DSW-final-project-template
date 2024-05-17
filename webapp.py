@@ -171,29 +171,60 @@ def renderAccountCreation():
     Class=request.form['class']
     Level=request.form['level']
     isDM = False
+    Party = "Null"
     
     if "DMaster" in request.form:
         isDM = True
         
-    characterData=createCharacterData(gitHubID, Name, Class, Level, isDM)
+    characterData=createCharacterData(gitHubID, Name, Class, Level, isDM, Party)
     
-    return render_template('account.html',character_data=characterData) 
+    return render_template('account.html',character_data=characterData)
+
+@app.route('/createParty', methods=['GET', 'POST'])
+def renderCreateParty(): 
+    return render_template('createParty.html') 
+
+@app.route('/SubmitParty', methods=['GET', 'POST'])
+def submitPartyInput(): 
+    Name = request.form['PartyName']
+    Password = request.form['Password']
+    
+    createparty = createParty(Name, Password)
+    
+    #TODO: Set players Current Party to name of create party, make new DB for partys
+    
+    
+    
+    editCharacter(gitHubID, CurrentParty,newLevel)
+    
+    return redirect('/Account')    
+   
+def createParty(name, password):
+    doc = {
+        "Name": name,
+        "Password": password,
+    }
+    partys.insert_one(doc)
+    currentParty = doc
+    return(currentParty)
+   
    
 @app.route('/updateCharacter', methods=['GET', 'POST'])
 def renderUpdateCharacter():  
     gitHubID = session['user_data']['login']
-    Level=request.form['level']
-    characterData=editCharacter(gitHubID, Level)
+    newLevel=request.form['level']
+    characterData=editCharacter(gitHubID, Level,newLevel)
     
     return redirect('/Account')
 
-def createCharacterData(gitHubID, Name, Class, Level, isDM):
+def createCharacterData(gitHubID, Name, Class, Level, isDM, Party):
     doc = {
         "GitHubID": gitHubID,
         "Name": Name,
         "Class": Class,
         "Level": Level,
-        "DMaster": isDM
+        "DMaster": isDM,
+        "CurrentParty": Party
     }
     characters.insert_one(doc)
     characterData = doc
@@ -203,9 +234,9 @@ def loadCharacterData(gitHubID):
     characterData = characters.find_one({"GitHubID": gitHubID})
     return(characterData)
     
-def editCharacter(gitHubID, Level):
+def editCharacter(gitHubID, Key, Value):
     query = characters.find_one({"GitHubID": gitHubID})
-    changes = {'$set': {"Level":Level}}
+    changes = {'$set': {Key:Value}}
     characters.update_one(query, changes)
 
     characterData = query
