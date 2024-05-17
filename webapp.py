@@ -13,7 +13,7 @@ import sys
  
 app = Flask(__name__)
 
-app.debug = False #Change this to False for production
+app.debug = True #Change this to False for production
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1' #Remove once done debugging
 
 app.secret_key = os.environ['SECRET_KEY'] #used to sign session cookies
@@ -37,8 +37,8 @@ github = oauth.remote_app(
 url = os.environ["MONGO_CONNECTION_STRING"]
 client = pymongo.MongoClient(url)
 db = client[os.environ["MONGO_DBNAME"]]
-characters = db['Characters'] #TODO: put the name of the collection here
-
+posts = db['posts']
+characters = db['Characters']
 # Send a ping to confirm a successful connection
 try:
     client.admin.command('ping')
@@ -102,6 +102,44 @@ def renderPage1():
 @app.route('/page2')
 def renderPage2():
     return render_template('page2.html')
+    
+    
+@app.route('/Summary',methods=['GET','POST'])
+def renderSummaryPage():
+    sumInput = getPosts()
+    print(sumInput)
+    return render_template('summary.html', sum_Input=sumInput)
+   
+def getPosts():
+    sumInput = ""
+    
+    for doc in posts.find():
+        sumInput = sumInput + Markup("<li>" + "<h3>" + str(doc["Head"]) + "</h3>" + "<p>" + str(doc["Body"]) + "</p>" + "</li>")   
+    
+    print(sumInput)
+    return(sumInput)
+
+@app.route('/SummaryInput',methods=['GET','POST'])
+def renderSummaryInputPage():
+    return render_template('summaryInput.html')
+    
+@app.route('/Submit',methods=['GET','POST'])
+def submitSummeryInput():
+    sumInput = request.form['bodyInput']
+    headInput = request.form['headInput']
+    updateMessage = updateSummary(headInput, sumInput)
+    return redirect('/Summary')
+
+
+
+def updateSummary(head, body):
+    doc = {
+        "Head": head,
+        "Body": body
+    }
+    posts.insert_one(doc)
+    sumUpdate = doc
+    return(sumUpdate)
 
 #the tokengetter is automatically called to check who is logged in.
 @github.tokengetter
