@@ -8,6 +8,13 @@
 
   <h1>This is Page 2</h1>
 
-  <p>Chat:</p>
+  <ul>
+ {{ message_display }}
+</ul>
+
+<form action={{ url_for("submitMessage") }} method="POST">
+  <input type="text" name="messageBody">
+  <input type="submit" class="submit" value="Submit">
+</form>
 
 {% endblock %}

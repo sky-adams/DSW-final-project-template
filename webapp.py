@@ -39,6 +39,7 @@ client = pymongo.MongoClient(url)
 db = client[os.environ["MONGO_DBNAME"]]
 posts = db['posts']
 characters = db['Characters']
+messages = db['messages']
 # Send a ping to confirm a successful connection
 try:
     client.admin.command('ping')
@@ -99,11 +100,41 @@ def renderPage1():
         user_data_pprint = '';
     return render_template('page1.html',dump_user_data=user_data_pprint)
 
+
+
 @app.route('/page2')
 def renderPage2():
-    return render_template('page2.html')
+    message = getMessages()
+    print(message)
+    return render_template('page2.html', message_display=message)
     
     
+def getMessages():
+    message = ""
+    
+    for doc in messages.find():
+        message = message + Markup("<li>" + "<p>" + str(doc["Body"]) + "</p>" + "</li>")   
+    
+    print(message)
+    return(message)    
+    
+@app.route('/Submit',methods=['GET','POST'])
+def submitMessage():
+    message = request.form['messageBody']
+    updatemessages = updateMessages(message)
+    return redirect('/page2')
+    
+def updateMessages(message):
+    
+    doc = {
+        "Body": message
+    }
+    messages.insert_one(doc)
+    mesUpdate = doc
+    return(mesUpdate)    
+    
+    
+  
 @app.route('/Summary',methods=['GET','POST'])
 def renderSummaryPage():
     sumInput = getPosts()
@@ -127,7 +158,7 @@ def renderSummaryInputPage():
 def submitSummeryInput():
     sumInput = request.form['bodyInput']
     headInput = request.form['headInput']
-    updateMessage = updateSummary(headInput, sumInput)
+    updateSummary = updateSummary(headInput, sumInput)
     return redirect('/Summary')
 
 

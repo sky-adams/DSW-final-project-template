@@ -3,7 +3,11 @@
 {% block title %}Message{% endblock %}
 
 {% block content %}
-  <p>{{ message }}</p>
-
+  <p></p>
+  
+<form action={{ url_for("submitMessage") }} method="POST">
+  <input type="text" name="messageBody">
+  <input type="submit" class="submit" value="Submit">
+</form>
 
 {% endblock %}
