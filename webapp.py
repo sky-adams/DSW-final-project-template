@@ -168,8 +168,12 @@ def renderAccountCreation():
     Name=request.form['name']
     Class=request.form['class']
     Level=request.form['level']
+    isDM = False
     
-    characterData=createCharacterData(gitHubID, Name, Class, Level)
+    if "DMaster" in request.form:
+        isDM = True
+        
+    characterData=createCharacterData(gitHubID, Name, Class, Level, isDM)
     
     return render_template('account.html',character_data=characterData) 
    
@@ -181,12 +185,13 @@ def renderUpdateCharacter():
     
     return redirect('/Account')
 
-def createCharacterData(gitHubID, Name, Class, Level):
+def createCharacterData(gitHubID, Name, Class, Level, isDM):
     doc = {
         "GitHubID": gitHubID,
         "Name": Name,
         "Class": Class,
-        "Level": Level
+        "Level": Level,
+        "DMaster": isDM
     }
     characters.insert_one(doc)
     characterData = doc
