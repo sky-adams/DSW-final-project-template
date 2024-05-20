@@ -12,13 +12,12 @@
  {{ message_display }}
 </ul>
 
-<script>
-$(document).ready(function(){
-    // Get value on button click and show alert
-    $(".submit").click(function(){
-		$(".submit").load("#1");
+
+<script type="text/javascript" charset="utf-8">
+    var socket = io();
+    socket.on('connect', function() {
+        socket.emit('my event', {data: 'I\'m connected!'});
     });
-});
 </script>
 
 <form action={{ url_for("submitMessage") }} method="POST">

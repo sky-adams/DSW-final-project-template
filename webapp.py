@@ -4,6 +4,8 @@ from flask_apscheduler import APScheduler
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask_oauthlib.client import OAuth
 from bson.objectid import ObjectId
+from flask_socketio import SocketIO, send, emit
+
 
 import pprint
 import os
@@ -19,6 +21,7 @@ os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1' #Remove once done debugging
 app.secret_key = os.environ['SECRET_KEY'] #used to sign session cookies
 oauth = OAuth(app)
 oauth.init_app(app) #initialize the app to be able to make requests for user information
+socketio = SocketIO(app)
 
 #Set up GitHub as OAuth provider
 github = oauth.remote_app(
@@ -133,7 +136,9 @@ def updateMessages(message):
     mesUpdate = doc
     return(mesUpdate)    
     
-    
+@socketio.on('my event')
+def handle_my_custom_event(data):
+    emit('my response', data, broadcast=True)
   
 @app.route('/Summary',methods=['GET','POST'])
 def renderSummaryPage():
@@ -235,4 +240,4 @@ def editCharacter(gitHubID, Level):
     characterData = query
     return(characterData)
 if __name__ == '__main__':
-    app.run()
+    socketio.run(app)
