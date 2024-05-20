@@ -109,16 +109,16 @@ def renderPage2():
 @app.route('/Summary',methods=['GET','POST'])
 def renderSummaryPage():
     gitHubID = session['user_data']['login']
-    sumInput = getPosts()
     isDM = loadCharacterData(gitHubID)["DMaster"]
     currentParty = loadCharacterData(gitHubID)["CurrentParty"]
+    sumInput = getPosts(currentParty)
     print(currentParty)
     return render_template('summary.html', sum_Input=sumInput,is_DM=isDM, current_party=currentParty)
    
-def getPosts():
+def getPosts(current_Party):
     sumInput = ""
     
-    for doc in posts.find():
+    for doc in posts.find({"PartyTag": current_Party}):
         sumInput = sumInput + Markup("<li>" + "<h3>" + str(doc["Head"]) + "</h3>" + "<p>" + str(doc["Body"]) + "</p>" + "</li>")   
     
     print(sumInput)
@@ -133,15 +133,18 @@ def renderSummaryInputPage():
 def submitSummeryInput():
     sumInput = request.form['bodyInput']
     headInput = request.form['headInput']
-    updateMessage = updateSummary(headInput, sumInput)
+    gitHubID = session['user_data']['login']
+    PartyTag = loadCharacterData(gitHubID)["CurrentParty"]
+    updateMessage = updateSummary(headInput, sumInput, PartyTag)
     return redirect('/Summary')
 
 
 
-def updateSummary(head, body):
+def updateSummary(head, body, partyTag):
     doc = {
         "Head": head,
-        "Body": body
+        "Body": body,
+        "PartyTag": partyTag
     }
     posts.insert_one(doc)
     sumUpdate = doc
