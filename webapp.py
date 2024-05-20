@@ -39,6 +39,8 @@ client = pymongo.MongoClient(url)
 db = client[os.environ["MONGO_DBNAME"]]
 posts = db['posts']
 characters = db['Characters']
+
+partys = db['Partys']
 # Send a ping to confirm a successful connection
 try:
     client.admin.command('ping')
@@ -186,16 +188,16 @@ def renderCreateParty():
 
 @app.route('/SubmitParty', methods=['GET', 'POST'])
 def submitPartyInput(): 
-    Name = request.form['PartyName']
+    gitHubID = session['user_data']['login']
+    PName = request.form['PartyName']
     Password = request.form['Password']
+    CurrentParty = "CurrentParty"
     
-    createparty = createParty(Name, Password)
+    createparty = createParty(PName, Password)
     
-    #TODO: Set players Current Party to name of create party, make new DB for partys
+    #TODO: Set players Current Party to name of create party
     
-    
-    
-    editCharacter(gitHubID, CurrentParty,newLevel)
+    editCharacter(gitHubID, CurrentParty, PName)
     
     return redirect('/Account')    
    
