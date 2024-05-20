@@ -111,7 +111,9 @@ def renderSummaryPage():
     gitHubID = session['user_data']['login']
     sumInput = getPosts()
     isDM = loadCharacterData(gitHubID)["DMaster"]
-    return render_template('summary.html', sum_Input=sumInput,is_DM=isDM)
+    currentParty = loadCharacterData(gitHubID)["CurrentParty"]
+    print(currentParty)
+    return render_template('summary.html', sum_Input=sumInput,is_DM=isDM, current_party=currentParty)
    
 def getPosts():
     sumInput = ""
@@ -173,13 +175,13 @@ def renderAccountCreation():
     Class=request.form['class']
     Level=request.form['level']
     isDM = False
-    Party = "Null"
+    Party = None
     
     if "DMaster" in request.form:
         isDM = True
         
     characterData=createCharacterData(gitHubID, Name, Class, Level, isDM, Party)
-    
+   
     return render_template('account.html',character_data=characterData)
 
 @app.route('/createParty', methods=['GET', 'POST'])
@@ -215,7 +217,8 @@ def createParty(name, password):
 def renderUpdateCharacter():  
     gitHubID = session['user_data']['login']
     newLevel=request.form['level']
-    characterData=editCharacter(gitHubID, Level,newLevel)
+    Key = "Level"
+    characterData=editCharacter(gitHubID, Key,newLevel)
     
     return redirect('/Account')
 
