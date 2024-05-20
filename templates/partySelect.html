@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% set active_page = "Summary" %}
+
+{% block title %}Summary{% endblock %}
+
+{% block content %}
+
+  <h1>Join a Party.</h1>
+
+<form action={{ url_for("submitPartyInvite") }} method="POST">
+  <label for="Submit">Party Name:</label><br>
+  <input type="text" name="PartyName"><br>
+  <label for="Submit">Password:</label><br>
+  <input type="text" name="Password"><br>
+  <input type="submit" class="submit" value="Submit">
+</form> 
+
+{% endblock %}

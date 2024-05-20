@@ -191,6 +191,12 @@ def renderAccountCreation():
 def renderCreateParty(): 
     return render_template('createParty.html') 
 
+@app.route('/JoinParty', methods=['GET', 'POST'])
+def renderPartySelection(): 
+    partys = getPartys()
+    return render_template('partySelect.html') 
+
+
 @app.route('/SubmitParty', methods=['GET', 'POST'])
 def submitPartyInput(): 
     gitHubID = session['user_data']['login']
