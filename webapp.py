@@ -4,12 +4,17 @@ from flask_apscheduler import APScheduler
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask_oauthlib.client import OAuth
 from bson.objectid import ObjectId
+from flask_socketio import SocketIO, send, emit
+from bson.objectid import ObjectId
+
+
 
 import pprint
 import os
 import time
 import pymongo
 import sys
+import datetime
  
 app = Flask(__name__)
 
@@ -19,6 +24,7 @@ os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1' #Remove once done debugging
 app.secret_key = os.environ['SECRET_KEY'] #used to sign session cookies
 oauth = OAuth(app)
 oauth.init_app(app) #initialize the app to be able to make requests for user information
+socketio = SocketIO(app)
 
 #Set up GitHub as OAuth provider
 github = oauth.remote_app(
@@ -39,8 +45,8 @@ client = pymongo.MongoClient(url)
 db = client[os.environ["MONGO_DBNAME"]]
 posts = db['posts']
 characters = db['Characters']
-
 partys = db['Partys']
+messages = db['messages']
 # Send a ping to confirm a successful connection
 try:
     client.admin.command('ping')
@@ -101,11 +107,51 @@ def renderPage1():
         user_data_pprint = '';
     return render_template('page1.html',dump_user_data=user_data_pprint)
 
+
+
 @app.route('/page2')
 def renderPage2():
-    return render_template('page2.html')
+    message = getMessages()
+    print(message)
+    return render_template('page2.html', message_display=message)
     
     
+def getMessages():
+    message = ""
+    
+    for doc in messages.find():
+        message = message + Markup("<li>" + "<p>" + str(doc["Body"]) + "</p>" + "</li>")   
+    
+    print(message)
+    return(message)    
+    
+@app.route('/Submit',methods=['GET','POST'])
+def submitMessage():
+    message = request.form['messageBody']
+    updateMessages(message)
+    socketio.emit('message', message)
+    remove_old_messages()
+    return redirect('/page2')
+    
+def updateMessages(message):
+    
+    doc = {
+        "Body": message
+    }
+    messages.insert_one(doc)
+
+def remove_old_messages():
+    numberofmessages = 0
+    for doc in messages.find():
+        numberofmessages += 1
+    if numberofmessages > 5:
+        messages.delete_one({})
+    
+    
+@socketio.on('text')
+def text(data):
+    socketio.emit('message', data)
+  
 @app.route('/Summary',methods=['GET','POST'])
 def renderSummaryPage():
     if 'user_data' in session:
@@ -139,7 +185,7 @@ def submitSummeryInput():
     headInput = request.form['headInput']
     gitHubID = session['user_data']['login']
     PartyTag = loadCharacterData(gitHubID)["CurrentParty"]
-    updateMessage = updateSummary(headInput, sumInput, PartyTag)
+    updateSummary = updateSummary(headInput, sumInput, PartyTag)
     return redirect('/Summary')
 
 
@@ -299,4 +345,4 @@ def editCharacter(gitHubID, Key, Value):
     characterData = query
     return(characterData)
 if __name__ == '__main__':
-    app.run()
+    socketio.run(app)
