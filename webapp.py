@@ -125,7 +125,7 @@ def getMessages():
     print(message)
     return(message)    
     
-@app.route('/Submit',methods=['GET','POST'])
+@app.route('/SubmitMessage',methods=['GET','POST'])
 def submitMessage():
     message = request.form['messageBody']
     updateMessages(message)
