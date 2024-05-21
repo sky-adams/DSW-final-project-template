@@ -198,14 +198,33 @@ def renderCreateParty():
 @app.route('/JoinParty', methods=['GET', 'POST'])
 def renderPartySelection(): 
     partys = getPartys()
-    return render_template('partySelect.html', party_List=partys) 
+    Error = ""
+    return render_template('partySelect.html', party_List=partys, message=Error) 
     
 @app.route('/PartyConnect', methods=['GET', 'POST'])
 def renderPartyConnect(): 
+    #Used for redirects
+    partysList = getPartys()
+    
     gitHubID = session['user_data']['login']
-    Name=request.form['PartyName']
-    Password=request.form['Password']
-    #editCharacter(gitHubID)
+    SelName=request.form['PartyName']
+    SelPassword=request.form['Password']
+    
+    Key = "CurrentParty"
+    
+    doc = partys.find_one({"Name": SelName})
+    if doc == None:
+        Error = "Name Incorrect"
+        return render_template('partySelect.html', party_List=partysList, message=Error)
+    
+    if SelPassword == doc["Password"]:
+        editCharacter(gitHubID, Key, SelName)
+        return redirect('/Account')
+    else:
+        Error = "Password Incorrect"
+        return render_template('partySelect.html', party_List=partysList, message=Error)
+    
+   #editCharacter(gitHubID)
     return redirect('/Account')
 
 def getPartys():
@@ -221,12 +240,19 @@ def submitPartyInput():
     Password = request.form['Password']
     CurrentParty = "CurrentParty"
     
-    createparty = createParty(PName, Password)
+    partyList = []
     
-    #TODO: Set players Current Party to name of create party
+    for doc in partys.find():
+        partyList.append(doc["Name"])
+        
+    print(partyList)
     
-    editCharacter(gitHubID, CurrentParty, PName)
-    
+    if PName == partyList:
+        message = 'Party name already in use, please choose a different name.'
+        return render_template('message.html', message=message)
+    else:
+        createparty = createParty(PName, Password)
+        editCharacter(gitHubID, CurrentParty, PName)
     return redirect('/Account')    
    
 def createParty(name, password):
