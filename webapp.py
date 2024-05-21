@@ -108,12 +108,16 @@ def renderPage2():
     
 @app.route('/Summary',methods=['GET','POST'])
 def renderSummaryPage():
-    gitHubID = session['user_data']['login']
-    isDM = loadCharacterData(gitHubID)["DMaster"]
-    currentParty = loadCharacterData(gitHubID)["CurrentParty"]
-    sumInput = getPosts(currentParty)
-    print(currentParty)
-    return render_template('summary.html', sum_Input=sumInput,is_DM=isDM, current_party=currentParty)
+    if 'user_data' in session:
+        gitHubID = session['user_data']['login']
+        isDM = loadCharacterData(gitHubID)["DMaster"]
+        currentParty = loadCharacterData(gitHubID)["CurrentParty"]
+        sumInput = getPosts(currentParty)
+        print(currentParty)
+        return render_template('summary.html', sum_Input=sumInput,is_DM=isDM, current_party=currentParty)
+    else:
+        message = 'Please Log in.'
+        return render_template('message.html', message=message)
    
 def getPosts(current_Party):
     sumInput = ""
@@ -194,9 +198,22 @@ def renderCreateParty():
 @app.route('/JoinParty', methods=['GET', 'POST'])
 def renderPartySelection(): 
     partys = getPartys()
-    return render_template('partySelect.html') 
+    return render_template('partySelect.html', party_List=partys) 
+    
+@app.route('/PartyConnect', methods=['GET', 'POST'])
+def renderPartyConnect(): 
+    gitHubID = session['user_data']['login']
+    Name=request.form['PartyName']
+    Password=request.form['Password']
+    #editCharacter(gitHubID)
+    return redirect('/Account')
 
-
+def getPartys():
+    partyList = ""
+    for doc in partys.find():
+        partyList = partyList + Markup("<li>" + "<h3>" + str(doc["Name"]) + "</h3>" + "</li>")
+    
+    return(partyList)
 @app.route('/SubmitParty', methods=['GET', 'POST'])
 def submitPartyInput(): 
     gitHubID = session['user_data']['login']
