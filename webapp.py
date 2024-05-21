@@ -1,108 +1,73 @@
-from flask import Flask, redirect, url_for, session, request, jsonify, render_template, flash
-from markupsafe import Markup
-from flask_apscheduler import APScheduler
-from apscheduler.schedulers.background import BackgroundScheduler
-from flask_oauthlib.client import OAuth
-from bson.objectid import ObjectId
-
-import pprint
 import os
-import time
-import pymongo
-import sys
- 
+from flask import Flask, url_for, render_template, request
+from flask import redirect
+from flask import session
+
 app = Flask(__name__)
 
-app.debug = False #Change this to False for production
-#os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1' #Remove once done debugging
+# In order to use "sessions",you need a "secret key".
+# This is something random you generate.  
+# For more info see: https://flask.palletsprojects.com/en/1.1.x/config/#SECRET_KEY
 
-app.secret_key = os.environ['SECRET_KEY'] #used to sign session cookies
-oauth = OAuth(app)
-oauth.init_app(app) #initialize the app to be able to make requests for user information
-
-#Set up GitHub as OAuth provider
-github = oauth.remote_app(
-    'github',
-    consumer_key=os.environ['GITHUB_CLIENT_ID'], #your web app's "username" for github's OAuth
-    consumer_secret=os.environ['GITHUB_CLIENT_SECRET'],#your web app's "password" for github's OAuth
-    request_token_params={'scope': 'user:email'}, #request read-only access to the user's email.  For a list of possible scopes, see developer.github.com/apps/building-oauth-apps/scopes-for-oauth-apps
-    base_url='https://api.github.com/',
-    request_token_url=None,
-    access_token_method='POST',
-    access_token_url='https://github.com/login/oauth/access_token',  
-    authorize_url='https://github.com/login/oauth/authorize' #URL for github's OAuth login
-)
-
-#Connect to database
-url = os.environ["MONGO_CONNECTION_STRING"]
-client = pymongo.MongoClient(url)
-db = client[os.environ["MONGO_DBNAME"]]
-collection = db['posts'] #TODO: put the name of the collection here
-
-# Send a ping to confirm a successful connection
-try:
-    client.admin.command('ping')
-    print("Pinged your deployment. You successfully connected to MongoDB!")
-except Exception as e:
-    print(e)
-
-#context processors run before templates are rendered and add variable(s) to the template's context
-#context processors must return a dictionary 
-#this context processor adds the variable logged_in to the conext for all templates
-@app.context_processor
-def inject_logged_in():
-    return {"logged_in":('github_token' in session)}
+app.secret_key=os.environ["SECRET_KEY"]; #This is an environment variable.  
+                                     #The value should be set on the server. 
+                                     #To run locally, set in env.bat (env.sh on Macs) and include that file in gitignore so the secret key is not made public.
 
 @app.route('/')
-def home():
+def renderMain():
     return render_template('home.html')
-
-#redirect to GitHub's OAuth page and confirm callback URL
-@app.route('/login')
-def login():   
-    return github.authorize(callback=url_for('authorized', _external=True, _scheme='https')) #callback URL must match the pre-configured callback URL
-
-@app.route('/logout')
-def logout():
-    session.clear()
-    flash('You were logged out.')
-    return redirect('/')
-
-@app.route('/login/authorized')
-def authorized():
-    resp = github.authorized_response()
-    if resp is None:
-        session.clear()
-        flash('Access denied: reason=' + request.args['error'] + ' error=' + request.args['error_description'] + ' full=' + pprint.pformat(request.args), 'error')      
-    else:
-        try:
-            session['github_token'] = (resp['access_token'], '') #save the token to prove that the user logged in
-            session['user_data']=github.get('user').data
-            message = 'You were successfully logged in as ' + session['user_data']['login'] + '.'
-        except Exception as inst:
-            session.clear()
-            print(inst)
-            message = 'Unable to login, please try again.', 'error'
-    return render_template('message.html', message=message)
-
+  
+@app.route('/startOver')
+def startOver():
+    session.clear() #clears variable values and creates a new session
+    return redirect(url_for('renderMain')) # url_for('renderMain') could be replaced with '/'
 
 @app.route('/page1')
 def renderPage1():
-    if 'user_data' in session:
-        user_data_pprint = pprint.pformat(session['user_data'])#format the user data nicely
-    else:
-        user_data_pprint = '';
-    return render_template('page1.html',dump_user_data=user_data_pprint)
+    return render_template('page1.html')
 
-@app.route('/page2')
+@app.route('/page2',methods=['GET','POST'])
 def renderPage2():
-    return render_template('page2.html')
+	if "firstName" not in session:
+    	session["firstName"]=request.form['firstName']
+	return render_template('page2.html')
 
-#the tokengetter is automatically called to check who is logged in.
-@github.tokengetter
-def get_github_oauth_token():
-    return session['github_token']
+@app.route('/page3',methods=['GET','POST'])
+def renderPage3():
+	if "lastName" not in session:
+   		session["lastName"]=request.form['lastName']
+    return render_template('page3.html')
+    
+@app.route('/page4',methods=['GET','POST'])
+def renderPage4():
+	if "favColor" not in session:
+    	session["favColor"]=request.form['favColor']
+    return render_template('page4.html')
 
+@app.route('/page5',methods=['GET','POST'])
+def renderPage5():
+	if "food" not in session:
+    	session["food"]=request.form['food']
+    return render_template('page5.html')
 
-if __name__ == '__main__':
-    app.run()
+@app.route('/page6',methods=['GET','POST'])
+def renderPage6():
+	if "favSeason" not in session:
+    	session["favSeason"]=request.form['favSeason']
+    return render_template('page6.html')
+
+@app.route('/page7',methods=['GET','POST'])
+def renderPage7():
+	if "favHoliday" not in session:
+    	session["favHoliday"]=request.form['favHoliday']
+    return render_template('page7.html')
+    
+    @app.route('/page8',methods=['GET','POST'])
+def renderPage7():
+	if "birthday" not in session:
+    	session["birthday"]=request.form['birthday']
+    return render_template('page7.html')
+
+    
+if __name__=="__main__":
+    app.run(debug=True)
