@@ -124,7 +124,8 @@ def getMessages():
 @app.route('/Submit',methods=['GET','POST'])
 def submitMessage():
     message = request.form['messageBody']
-    updatemessages = updateMessages(message)
+    updateMessages(message)
+    socketio.emit('message', message)
     return redirect('/page2')
     
 def updateMessages(message):
@@ -132,13 +133,11 @@ def updateMessages(message):
     doc = {
         "Body": message
     }
-    messages.insert_one(doc)
-    mesUpdate = doc
-    return(mesUpdate)    
+    messages.insert_one(doc)   
     
-@socketio.on('my event')
-def handle_my_custom_event(data):
-    emit('my response', data, broadcast=True)
+@socketio.on('text')
+def text(data):
+    socketio.emit('message', data)
   
 @app.route('/Summary',methods=['GET','POST'])
 def renderSummaryPage():
