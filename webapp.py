@@ -185,7 +185,7 @@ def submitSummeryInput():
     headInput = request.form['headInput']
     gitHubID = session['user_data']['login']
     PartyTag = loadCharacterData(gitHubID)["CurrentParty"]
-    updateSummary = updateSummary(headInput, sumInput, PartyTag)
+    updateSummary(headInput, sumInput, PartyTag)
     return redirect('/Summary')
 
 
