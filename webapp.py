@@ -45,6 +45,7 @@ client = pymongo.MongoClient(url)
 db = client[os.environ["MONGO_DBNAME"]]
 posts = db['posts']
 characters = db['Characters']
+partys = db['Partys']
 messages = db['messages']
 # Send a ping to confirm a successful connection
 try:
@@ -153,15 +154,21 @@ def text(data):
   
 @app.route('/Summary',methods=['GET','POST'])
 def renderSummaryPage():
-    gitHubID = session['user_data']['login']
-    sumInput = getPosts()
-    isDM = loadCharacterData(gitHubID)["DMaster"]
-    return render_template('summary.html', sum_Input=sumInput,is_DM=isDM)
+    if 'user_data' in session:
+        gitHubID = session['user_data']['login']
+        isDM = loadCharacterData(gitHubID)["DMaster"]
+        currentParty = loadCharacterData(gitHubID)["CurrentParty"]
+        sumInput = getPosts(currentParty)
+        print(currentParty)
+        return render_template('summary.html', sum_Input=sumInput,is_DM=isDM, current_party=currentParty)
+    else:
+        message = 'Please Log in.'
+        return render_template('message.html', message=message)
    
-def getPosts():
+def getPosts(current_Party):
     sumInput = ""
     
-    for doc in posts.find():
+    for doc in posts.find({"PartyTag": current_Party}):
         sumInput = sumInput + Markup("<li>" + "<h3>" + str(doc["Head"]) + "</h3>" + "<p>" + str(doc["Body"]) + "</p>" + "</li>")   
     
     print(sumInput)
@@ -176,15 +183,18 @@ def renderSummaryInputPage():
 def submitSummeryInput():
     sumInput = request.form['bodyInput']
     headInput = request.form['headInput']
-    updateSummary = updateSummary(headInput, sumInput)
+    gitHubID = session['user_data']['login']
+    PartyTag = loadCharacterData(gitHubID)["CurrentParty"]
+    updateSummary = updateSummary(headInput, sumInput, PartyTag)
     return redirect('/Summary')
 
 
 
-def updateSummary(head, body):
+def updateSummary(head, body, partyTag):
     doc = {
         "Head": head,
-        "Body": body
+        "Body": body,
+        "PartyTag": partyTag
     }
     posts.insert_one(doc)
     sumUpdate = doc
@@ -218,29 +228,106 @@ def renderAccountCreation():
     Class=request.form['class']
     Level=request.form['level']
     isDM = False
+    Party = None
     
     if "DMaster" in request.form:
         isDM = True
         
-    characterData=createCharacterData(gitHubID, Name, Class, Level, isDM)
+    characterData=createCharacterData(gitHubID, Name, Class, Level, isDM, Party)
+   
+    return render_template('account.html',character_data=characterData)
+
+@app.route('/createParty', methods=['GET', 'POST'])
+def renderCreateParty(): 
+    return render_template('createParty.html') 
+
+@app.route('/JoinParty', methods=['GET', 'POST'])
+def renderPartySelection(): 
+    partys = getPartys()
+    Error = ""
+    return render_template('partySelect.html', party_List=partys, message=Error) 
     
-    return render_template('account.html',character_data=characterData) 
+@app.route('/PartyConnect', methods=['GET', 'POST'])
+def renderPartyConnect(): 
+    #Used for redirects
+    partysList = getPartys()
+    
+    gitHubID = session['user_data']['login']
+    SelName=request.form['PartyName']
+    SelPassword=request.form['Password']
+    
+    Key = "CurrentParty"
+    
+    doc = partys.find_one({"Name": SelName})
+    if doc == None:
+        Error = "Name Incorrect"
+        return render_template('partySelect.html', party_List=partysList, message=Error)
+    
+    if SelPassword == doc["Password"]:
+        editCharacter(gitHubID, Key, SelName)
+        return redirect('/Account')
+    else:
+        Error = "Password Incorrect"
+        return render_template('partySelect.html', party_List=partysList, message=Error)
+    
+   #editCharacter(gitHubID)
+    return redirect('/Account')
+
+def getPartys():
+    partyList = ""
+    for doc in partys.find():
+        partyList = partyList + Markup("<li>" + "<h3>" + str(doc["Name"]) + "</h3>" + "</li>")
+    
+    return(partyList)
+@app.route('/SubmitParty', methods=['GET', 'POST'])
+def submitPartyInput(): 
+    gitHubID = session['user_data']['login']
+    PName = request.form['PartyName']
+    Password = request.form['Password']
+    CurrentParty = "CurrentParty"
+    
+    partyList = []
+    
+    for doc in partys.find():
+        partyList.append(doc["Name"])
+        
+    print(partyList)
+    
+    if PName in partyList:
+        message = 'Party name already in use, please choose a different name.'
+        return render_template('message.html', message=message)
+    else:
+        createparty = createParty(PName, Password)
+        editCharacter(gitHubID, CurrentParty, PName)
+    return redirect('/Account')    
+   
+def createParty(name, password):
+    doc = {
+        "Name": name,
+        "Password": password,
+    }
+    partys.insert_one(doc)
+    currentParty = doc
+    return(currentParty)
+   
    
 @app.route('/updateCharacter', methods=['GET', 'POST'])
 def renderUpdateCharacter():  
     gitHubID = session['user_data']['login']
-    Level=request.form['level']
-    characterData=editCharacter(gitHubID, Level)
+    newLevel=request.form['level']
+    Key = "Level"
+    characterData=editCharacter(gitHubID, Key,newLevel)
     
     return redirect('/Account')
 
-def createCharacterData(gitHubID, Name, Class, Level, isDM):
+def createCharacterData(gitHubID, Name, Class, Level, isDM, Party):
     doc = {
         "GitHubID": gitHubID,
         "Name": Name,
         "Class": Class,
         "Level": Level,
-        "DMaster": isDM
+        "DMaster": isDM,
+        "CurrentParty": Party
     }
     characters.insert_one(doc)
     characterData = doc
@@ -250,9 +337,9 @@ def loadCharacterData(gitHubID):
     characterData = characters.find_one({"GitHubID": gitHubID})
     return(characterData)
     
-def editCharacter(gitHubID, Level):
+def editCharacter(gitHubID, Key, Value):
     query = characters.find_one({"GitHubID": gitHubID})
-    changes = {'$set': {"Level":Level}}
+    changes = {'$set': {Key:Value}}
     characters.update_one(query, changes)
 
     characterData = query

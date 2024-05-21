@@ -32,4 +32,14 @@
 			<input type="submit" value="Submit">
 		</form>
 	{% endif %}
+	
+	<form action={{ url_for("renderCreateParty") }} method="POST">
+		<label for="Submit">Create a party.</label><br>
+		<input type="submit" value="Submit" id="Submit">
+	</form>
+	
+	<form action={{ url_for("renderPartySelection") }} method="POST">
+		<label for="Submit">Join a party.</label><br>
+		<input type="submit" value="Submit" id="Submit">
+	</form>
 {% endblock %}
