@@ -10,3 +10,4 @@ Flask-PyMongo
 pymongo
 Flask_APScheduler
 flask_socketio
+bson.objectid

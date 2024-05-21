@@ -5,6 +5,8 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from flask_oauthlib.client import OAuth
 from bson.objectid import ObjectId
 from flask_socketio import SocketIO, send, emit
+from bson.objectid import ObjectId
+
 
 
 import pprint
@@ -12,6 +14,7 @@ import os
 import time
 import pymongo
 import sys
+import datetime
  
 app = Flask(__name__)
 
@@ -126,6 +129,7 @@ def submitMessage():
     message = request.form['messageBody']
     updateMessages(message)
     socketio.emit('message', message)
+    remove_old_messages()
     return redirect('/page2')
     
 def updateMessages(message):
@@ -133,7 +137,15 @@ def updateMessages(message):
     doc = {
         "Body": message
     }
-    messages.insert_one(doc)   
+    messages.insert_one(doc)
+
+def remove_old_messages():
+    numberofmessages = 0
+    for doc in messages.find():
+        numberofmessages += 1
+    if numberofmessages > 5:
+        messages.delete_one({})
+    
     
 @socketio.on('text')
 def text(data):
