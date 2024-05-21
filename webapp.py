@@ -247,7 +247,7 @@ def submitPartyInput():
         
     print(partyList)
     
-    if PName == partyList:
+    if PName in partyList:
         message = 'Party name already in use, please choose a different name.'
         return render_template('message.html', message=message)
     else:
