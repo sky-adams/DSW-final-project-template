@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block title %}Page 1: Birthday{% endblock %}
+
+{% block content %}
+  <h1>Page 8: Birthday:</h1>
+
+ <form action={{ url_for("renderPage2") }} method="POST">
+  Birthday:<br>
+  <input type="text" name="birthday">
+  <input type="submit" value="Submit">
+  <br>
+ </form> 
+
+
+{% endblock %}

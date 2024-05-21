@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block title %}Page 1: Food{% endblock %}
+
+{% block content %}
+  <h1>Page 1: Food:</h1>
+
+ <form action={{ url_for("renderPage2") }} method="POST">
+  Food:<br>
+  <input type="text" name="food">
+  <input type="submit" value="Submit">
+  <br>
+ </form> 
+
+
+{% endblock %}
