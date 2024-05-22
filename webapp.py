@@ -132,7 +132,7 @@ def getMessages(current_Party):
     return(message)    
     
 @app.route('/SubmitMessage',methods=['GET','POST'])
-def submitMessage();
+def submitMessage():
     #Used for checking party
     gitHubID = session['user_data']['login']
     PartyTag = loadCharacterData(gitHubID)["CurrentParty"]
@@ -147,7 +147,7 @@ def submitMessage();
 def updateMessages(message, partyTag):
     
     doc = {
-        "Body": message
+        "Body": message,
         "PartyTag": partyTag
     }
     messages.insert_one(doc)
