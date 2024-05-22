@@ -140,7 +140,7 @@ def submitMessage():
     message = request.form['messageBody']
     updateMessages(message, PartyTag)
     socketio.emit('message', message)
-    remove_old_messages()
+    remove_old_messages(PartyTag)
     
     return redirect('/page2')
     
@@ -152,12 +152,12 @@ def updateMessages(message, partyTag):
     }
     messages.insert_one(doc)
 
-def remove_old_messages():
+def remove_old_messages(partyTag):
     numberofmessages = 0
-    for doc in messages.find():
+    for doc in messages.find({"PartyTag": partyTag}):
         numberofmessages += 1
     if numberofmessages > 5:
-        messages.delete_one({})
+        messages.delete_one({"PartyTag": partyTag})
     
     
 @socketio.on('text')
