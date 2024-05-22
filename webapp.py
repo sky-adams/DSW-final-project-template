@@ -7,7 +7,7 @@ from bson.objectid import ObjectId
 from flask_socketio import SocketIO, send, emit
 from bson.objectid import ObjectId
 
-
+#TODO Check why log out check is not working and why submitting when logged out on summary adds a message
 
 import pprint
 import os
@@ -78,6 +78,7 @@ def logout():
     #else:
     session.clear()
     flash('You were logged out.')
+    print('Loged out')
     return redirect('/')
 
 @app.route('/login/authorized')
