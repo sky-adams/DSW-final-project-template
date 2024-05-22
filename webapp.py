@@ -112,32 +112,43 @@ def renderPage1():
 
 @app.route('/page2')
 def renderPage2():
-    message = getMessages()
-    print(message)
-    return render_template('page2.html', message_display=message)
+    if 'user_data' in session:
+        gitHubID = session['user_data']['login']
+        currentParty = loadCharacterData(gitHubID)["CurrentParty"]
+        message = getMessages(currentParty)
+        print(message)
+        return render_template('page2.html', message_display=message)
+    else:
+        message = 'Please Log in.'
+        return render_template('message.html', message=message)
     
-    
-def getMessages():
+def getMessages(current_Party):
     message = ""
     
-    for doc in messages.find():
+    for doc in messages.find({"PartyTag": current_Party}):
         message = message + Markup("<li>" + "<p>" + str(doc["Body"]) + "</p>" + "</li>")   
     
     print(message)
     return(message)    
     
 @app.route('/SubmitMessage',methods=['GET','POST'])
-def submitMessage():
+def submitMessage();
+    #Used for checking party
+    gitHubID = session['user_data']['login']
+    PartyTag = loadCharacterData(gitHubID)["CurrentParty"]
+    
     message = request.form['messageBody']
-    updateMessages(message)
+    updateMessages(message, PartyTag)
     socketio.emit('message', message)
     remove_old_messages()
+    
     return redirect('/page2')
     
-def updateMessages(message):
+def updateMessages(message, partyTag):
     
     doc = {
         "Body": message
+        "PartyTag": partyTag
     }
     messages.insert_one(doc)
 

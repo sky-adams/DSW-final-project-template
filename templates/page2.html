@@ -5,30 +5,32 @@
 {% block title %}page2{% endblock %}
 
 {% block content %}
+{% if current_party != None%}
+	  <h1>This is Page 2</h1>
 
-  <h1>This is Page 2</h1>
-
-  <ul id="list">
- {{ message_display }}
-</ul>
+	  <ul id="list">
+	 {{ message_display }}
+	</ul>
 
 
-<script type="text/javascript" charset="utf-8">
-$(document).ready(function(){
-    var socket = io();
-    socket.on('connect', function() {
-        socket.emit('', {data: 'I\'m connected!'});
+	<script type="text/javascript" charset="utf-8">
+	$(document).ready(function(){
+		var socket = io();
+		socket.on('connect', function() {
+			socket.emit('', {data: 'I\'m connected!'});
+		});
+		 
+		 socket.on('message', function(data) {
+			$('#list').append(data);
+		});
 	});
-	 
-	 socket.on('message', function(data) {
-        $('#list').append(data);
-    });
-});
-</script>
+	</script>
 
-<form action={{ url_for("submitMessage") }} method="POST">
-  <input type="text" name="messageBody" id="mes">
-  <input type="submit" class="submit" value="Submit">
-</form>
-
+	<form action={{ url_for("submitMessage") }} method="POST">
+	  <input type="text" name="messageBody" id="mes">
+	  <input type="submit" class="submit" value="Submit">
+	</form>
+{%else%}
+	<h1>Please join a party.</h1>
+{%endif%}
 {% endblock %}
