@@ -21,7 +21,7 @@ $(document).ready(function(){
 	});
 	 
 	 socket.on('message', function(data) {
-        $('#list').append(data);
+        $('#list').append("<li>" + data + "</li>");
     });
 });
 </script>
