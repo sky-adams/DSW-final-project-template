@@ -4,7 +4,7 @@ from flask_apscheduler import APScheduler
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask_oauthlib.client import OAuth
 from bson.objectid import ObjectId
-from flask_socketio import SocketIO, send, emit
+from flask_socketio import SocketIO, send, emit, join_room, leave_room
 from bson.objectid import ObjectId
 
 #TODO Check why log out check is not working and why submitting when logged out on summary adds a message
@@ -139,7 +139,7 @@ def submitMessage():
     
     message = request.form['messageBody']
     updateMessages(message, PartyTag)
-    socketio.emit('message', message)
+    socketio.emit('message', message, to=PartyTag)
     remove_old_messages(PartyTag)
     
     return redirect('/page2')
@@ -162,7 +162,17 @@ def remove_old_messages(partyTag):
     
 @socketio.on('text')
 def text(data):
-    socketio.emit('message', data)
+    username = session['user_data']['login']
+    room = loadCharacterData(gitHubID)["CurrentParty"]
+    socketio.emit('message', data, to=room)
+  
+@socketio.on('join')
+def on_join(data):
+    username = session['user_data']['login']
+    room = loadCharacterData(username)["CurrentParty"]
+    join_room(room)
+    send(username + ' has entered the room.', to=room)
+    print("Joined Room")
   
 @app.route('/Summary',methods=['GET','POST'])
 def renderSummaryPage():
