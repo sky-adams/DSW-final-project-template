@@ -7,7 +7,7 @@ from bson.objectid import ObjectId
 from flask_socketio import SocketIO, send, emit
 from bson.objectid import ObjectId
 
-
+#TODO Check why log out check is not working and why submitting when logged out on summary adds a message
 
 import pprint
 import os
@@ -78,6 +78,7 @@ def logout():
     #else:
     session.clear()
     flash('You were logged out.')
+    print('Loged out')
     return redirect('/')
 
 @app.route('/login/authorized')
@@ -111,15 +112,20 @@ def renderPage1():
 
 @app.route('/page2')
 def renderPage2():
-    message = getMessages()
-    print(message)
-    return render_template('page2.html', message_display=message)
+    if 'user_data' in session:
+        gitHubID = session['user_data']['login']
+        currentParty = loadCharacterData(gitHubID)["CurrentParty"]
+        message = getMessages(currentParty)
+        print(message)
+        return render_template('page2.html', message_display=message)
+    else:
+        message = 'Please Log in.'
+        return render_template('message.html', message=message)
     
-    
-def getMessages():
+def getMessages(current_Party):
     message = ""
     
-    for doc in messages.find():
+    for doc in messages.find({"PartyTag": current_Party}):
         message = message + Markup("<li>" + "<p>" + str(doc["Body"]) + "</p>" + "</li>")   
     
     print(message)
@@ -127,25 +133,31 @@ def getMessages():
     
 @app.route('/SubmitMessage',methods=['GET','POST'])
 def submitMessage():
+    #Used for checking party
+    gitHubID = session['user_data']['login']
+    PartyTag = loadCharacterData(gitHubID)["CurrentParty"]
+    
     message = request.form['messageBody']
-    updateMessages(message)
+    updateMessages(message, PartyTag)
     socketio.emit('message', message)
-    remove_old_messages()
+    remove_old_messages(PartyTag)
+    
     return redirect('/page2')
     
-def updateMessages(message):
+def updateMessages(message, partyTag):
     
     doc = {
-        "Body": message
+        "Body": message,
+        "PartyTag": partyTag
     }
     messages.insert_one(doc)
 
-def remove_old_messages():
+def remove_old_messages(partyTag):
     numberofmessages = 0
-    for doc in messages.find():
+    for doc in messages.find({"PartyTag": partyTag}):
         numberofmessages += 1
     if numberofmessages > 5:
-        messages.delete_one({})
+        messages.delete_one({"PartyTag": partyTag})
     
     
 @socketio.on('text')
