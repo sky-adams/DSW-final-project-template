@@ -63,6 +63,7 @@ def inject_logged_in():
 
 @app.route('/')
 def home():
+    x = messages.delete_many({})
     #session.clear()
     return render_template('home.html')
 
@@ -126,7 +127,7 @@ def getMessages(current_Party):
     message = ""
     
     for doc in messages.find({"PartyTag": current_Party}):
-        message = message + Markup("<li>" + "<p>" + str(doc["Body"]) + "</p>" + "</li>")   
+        message = message + Markup("<li>" + "<p>" + str(doc["Username"]) + ": " + str(doc["Body"]) + "</p>" + "</li>")   
     
     print(message)
     return(message)    
@@ -138,15 +139,17 @@ def submitMessage():
     PartyTag = loadCharacterData(gitHubID)["CurrentParty"]
     
     message = request.form['messageBody']
-    updateMessages(message, PartyTag)
-    socketio.emit('message', message, to=PartyTag)
+    updateMessages(message, PartyTag, gitHubID)
+    username = gitHubID
+    socketio.emit('message', username + ": " + message, to=PartyTag)
     remove_old_messages(PartyTag)
     
     return redirect('/page2')
     
-def updateMessages(message, partyTag):
+def updateMessages(message, partyTag, username):
     
     doc = {
+        "Username": username,
         "Body": message,
         "PartyTag": partyTag
     }
@@ -158,21 +161,14 @@ def remove_old_messages(partyTag):
         numberofmessages += 1
     if numberofmessages > 5:
         messages.delete_one({"PartyTag": partyTag})
-    
-    
-@socketio.on('text')
-def text(data):
-    username = session['user_data']['login']
-    room = loadCharacterData(gitHubID)["CurrentParty"]
-    socketio.emit('message', data, to=room)
   
 @socketio.on('join')
 def on_join(data):
     username = session['user_data']['login']
     room = loadCharacterData(username)["CurrentParty"]
     join_room(room)
-    send(username + ' has entered the room.', to=room)
-    print("Joined Room")
+    #send(username + ' has entered the room.', to=room)
+    #print("Joined Room")
   
 @app.route('/Summary',methods=['GET','POST'])
 def renderSummaryPage():
