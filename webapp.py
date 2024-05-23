@@ -63,8 +63,6 @@ def inject_logged_in():
 
 @app.route('/')
 def home():
-    x = messages.delete_many({})
-    #session.clear()
     return render_template('home.html')
 
 #redirect to GitHub's OAuth page and confirm callback URL
