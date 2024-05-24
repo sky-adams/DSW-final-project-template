@@ -9,7 +9,9 @@
 	<h1>This is the Summary page</h1>
 
 	<ul>
+		<div>
 		{{ sum_Input }}
+		</div>
 	</ul>
 	{% if is_DM == True %}
 		<form action={{ url_for("renderSummaryInputPage") }}  method="POST">
