@@ -14,14 +14,35 @@
 body{
 	background: #202020;
 	font-family: garamond;
-	font-weight: bold;
 	
 }
+
+
+h5{
+	font-size:50px;
+}
+
+p{
+	font-size:50px;
+}
+
+.scroll{
+	width:100%;
+	max-height:400px;
+	overflow: auto;
+	display:flex;
+	flex-direction: column-reverse;
+}
+
+input {
+		overflow: auto;
+        width: 80%;
+		height: auto;
+    }
 
 .content{
 	font-family: garamond;
 	font-weight: bold;
-	
 }
 
 .row{

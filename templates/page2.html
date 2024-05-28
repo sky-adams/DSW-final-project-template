@@ -26,9 +26,9 @@
 });
 </script>
 
-<form action={{ url_for("submitMessage") }} method="POST">
+<form action={{ url_for("submitMessage") }} method="POST" class="ms-4 input">
   <input type="text" name="messageBody" id="mes">
-  <input type="submit" class="submit" value="Submit" id="send">
+  <input type="submit" class="submit" value="Submit" id="send" class="input">
 </form>
 {%else%}
 	<h1>Please join a party.</h1>
