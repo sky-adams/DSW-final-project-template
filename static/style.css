@@ -11,10 +11,47 @@
 
 /*Space 2*/
 
+body{
+	background: #202020;
+	font-family: garamond;
+	font-weight: bold;
+	
+}
 
+.content{
+	font-family: garamond;
+	font-weight: bold;
+	
+}
 
+.row{
+	background-color: #D9D9D9;
+}
 
+.background{
+	background-color: #D9D9D9;
+}
 
+ul {
+  list-style-type: none;
+}
 
+li{
+	background-color: #D9D9D9;
+	border-radius: 5px;
+	padding-top: 1px;
+	padding-left: 2px;
+	
+}
+
+.bg-color {
+    background-color: #D9D9D9;
+ }
+ 
+.list {
+	background-color: #5A5A5A;
+	border-radius: 5px;
+	
+}
 
 /*End of Space 2*/

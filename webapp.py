@@ -139,7 +139,7 @@ def submitMessage():
     message = request.form['messageBody']
     updateMessages(message, PartyTag, gitHubID)
     username = gitHubID
-    socketio.emit('message', username + ": " + message, to=PartyTag)
+    socketio.emit('message', "<b>" + username + "</b>" + ": " + message, to=PartyTag)
     remove_old_messages(PartyTag)
     
     return redirect('/page2')
@@ -185,7 +185,7 @@ def getPosts(current_Party):
     sumInput = ""
     
     for doc in posts.find({"PartyTag": current_Party}):
-        sumInput = sumInput + Markup("<li>" + "<h3>" + str(doc["Head"]) + "</h3>" + "<p>" + str(doc["Body"]) + "</p>" + "</li>")   
+        sumInput = sumInput + Markup("<li>" + "<h5>" + str(doc["Head"]) + "</h5>" + "<p>" + str(doc["Body"]) + "</p>" + "</li>")   
     
     print(sumInput)
     return(sumInput)
