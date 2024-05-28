@@ -8,13 +8,13 @@
 {% if current_party != None%}
 	<h1>This is the Summary page</h1>
 
-	<ul>
+	<ul class="scroll">
 		<div>
 		{{ sum_Input }}
 		</div>
 	</ul>
 	{% if is_DM == True %}
-		<form action={{ url_for("renderSummaryInputPage") }}  method="POST">
+		<form action={{ url_for("renderSummaryInputPage") }}  method="POST" class="ms-4 input">
 			<input type="submit" class="submit" value="Submit">
 		</form>
 	{%endif%}
