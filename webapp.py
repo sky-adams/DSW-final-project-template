@@ -360,5 +360,19 @@ def editCharacter(gitHubID, Key, Value):
 
     characterData = query
     return(characterData)
+
+@app.route('/uploadMapImage', methods=['GET', 'POST'])
+def uploadMap():  
+    if request.method == 'POST':
+        if request.files:
+            image = request.files["image"]
+            
+            print(image)
+            
+            return redirect("/page1")
+            
+            
+            
+#https://www.youtube.com/watch?v=6WruncSoCdI
 if __name__ == '__main__':
     socketio.run(app)
