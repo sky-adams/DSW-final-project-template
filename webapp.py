@@ -63,14 +63,20 @@ def inject_logged_in():
 
 @app.route('/')
 def home():
-    recentEvents = getRecentPosts()
-    return render_template('home.html', recent_events=recentEvents)
-
+    if 'user_data' in session:
+        recentEvents = getRecentPosts()
+        gitHubID = session['user_data']['login']
+        #TODO fix edgecase if user signed in but no character
+        currentParty = loadCharacterData(gitHubID)["CurrentParty"]
+        return render_template('home.html', recent_events=recentEvents, current_party=currentParty)
+    else:
+        message = 'Please Log in.'
+        return render_template('message.html', message=message)
 def getRecentPosts():
     sumPosts = ""
     
     for doc in posts.find():
-        sumPosts = sumPosts + Markup("<li>" + "<h5>" + str(doc["Head"]) + "</h5>" + "<p>" + str(doc["Body"]) + "</p>" + "</li>")   
+        sumPosts = Markup("<li>" + "<h5>" + str(doc["Head"]) + "</h5>" + "<p>" + str(doc["Body"]) + "</p>" + "</li>") + sumPosts 
     print(sumPosts)
     return(sumPosts)
 

@@ -5,6 +5,8 @@
 {% block title %}page1{% endblock %}
 
 {% block content %}
+{% if current_party != None%}
+
  <div class="background">
   <h1>This is Page 1</h1>
 
@@ -15,4 +17,9 @@
     {{ dump_user_data }}
   </pre>
 </div>
+
+{%else%}
+	<h1> Welcome!</h1>
+{%endif%}
+
 {% endblock %}

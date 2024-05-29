@@ -27,6 +27,13 @@ p{
 	background-color: #D9D9D9;
 }
 
+.scroll2{
+	width:40%;
+	max-height:600px;
+	overflow: auto;
+
+}
+
 .scroll{
 	width:100%;
 	max-height:400px;
