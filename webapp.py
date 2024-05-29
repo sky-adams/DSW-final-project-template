@@ -13,6 +13,7 @@ import pprint
 import os
 import time
 import pymongo
+import gridfs
 import sys
 import datetime
  
@@ -42,11 +43,16 @@ github = oauth.remote_app(
 #Connect to database
 url = os.environ["MONGO_CONNECTION_STRING"]
 client = pymongo.MongoClient(url)
+#Test from StackOverflow
+#imageDBConnect = client.Images
+
 db = client[os.environ["MONGO_DBNAME"]]
+ImagesDB = client[os.environ["MONGO_DBIMAGES"]]
 posts = db['posts']
 characters = db['Characters']
 partys = db['Partys']
 messages = db['messages']
+
 # Send a ping to confirm a successful connection
 try:
     client.admin.command('ping')
@@ -54,6 +60,7 @@ try:
 except Exception as e:
     print(e)
 
+imagesFS = gridfs.GridFS(ImagesDB)
 #context processors run before templates are rendered and add variable(s) to the template's context
 #context processors must return a dictionary 
 #this context processor adds the variable logged_in to the conext for all templates
@@ -365,14 +372,30 @@ def editCharacter(gitHubID, Key, Value):
 def uploadMap():  
     if request.method == 'POST':
         if request.files:
-            image = request.files["image"]
+            gitHubID = session['user_data']['login']
+            currentParty = loadCharacterData(gitHubID)["CurrentParty"]
+            file = request.files["image"]
+            image = request.files["image"].read()
+            imageName = file.filename
+            print("Submitted Image")
+            
+            uploadImage(image, imageName, currentParty)
             
             print(image)
             
-            return redirect("/page1")
+            return redirect(request.url)
+        else:
+            print("Did not submit image")
             
-            
-            
+            return redirect(request.url)
+                   
+    return redirect("/page1")  
+
+
+def uploadImage(image, imageName, partyTag):
+        
+    imagesFS.put(image, filename=imageName, party=partyTag)
+        
 #https://www.youtube.com/watch?v=6WruncSoCdI
 if __name__ == '__main__':
     socketio.run(app)
