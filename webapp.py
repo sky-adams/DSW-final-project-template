@@ -63,7 +63,16 @@ def inject_logged_in():
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    recentEvents = getRecentPosts()
+    return render_template('home.html', recent_events=recentEvents)
+
+def getRecentPosts():
+    sumPosts = ""
+    
+    for doc in posts.find():
+        sumPosts = sumPosts + Markup("<li>" + "<h5>" + str(doc["Head"]) + "</h5>" + "<p>" + str(doc["Body"]) + "</p>" + "</li>")   
+    print(sumPosts)
+    return(sumPosts)
 
 #redirect to GitHub's OAuth page and confirm callback URL
 @app.route('/login')
