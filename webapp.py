@@ -105,17 +105,6 @@ def authorized():
             message = 'Unable to login, please try again.', 'error'
     return render_template('message.html', message=message)
 
-
-@app.route('/page1')
-def renderPage1():
-    if 'user_data' in session:
-        user_data_pprint = pprint.pformat(session['user_data'])#format the user data nicely
-    else:
-        user_data_pprint = '';
-    return render_template('page1.html',dump_user_data=user_data_pprint)
-
-
-
 @app.route('/page2')
 def renderPage2():
     if 'user_data' in session:
@@ -368,6 +357,20 @@ def editCharacter(gitHubID, Key, Value):
     characterData = query
     return(characterData)
 
+@app.route('/page1')
+def renderPage1():
+    if 'user_data' in session:
+        gitHubID = session['user_data']['login']
+        currentParty = loadCharacterData(gitHubID)["CurrentParty"]
+        
+        mapImage = downloadImage(currentParty)
+        
+        user_data_pprint = pprint.pformat(session['user_data'])#format the user data nicely
+    else:
+        user_data_pprint = '';
+    return render_template('page1.html',dump_user_data=user_data_pprint, map_Image=mapImage)
+
+
 @app.route('/uploadMapImage', methods=['GET', 'POST'])
 def uploadMap():  
     if request.method == 'POST':
@@ -393,7 +396,9 @@ def uploadMap():
     
     
 def downloadImage(partyTag):
-    image = fs.get_last_version(party=partyTag)
+    doc = imagesFS.find_one({"party": partyTag})
+    name = doc["filename"]
+    image = imagesFS.get_last_version(filename=name, party=partyTag)
     return(image)
 
 

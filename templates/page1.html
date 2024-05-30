@@ -11,17 +11,23 @@
 <div class="row">
 	<div class="col">
 		<div class="Map">
-			<form action={{ url_for("uploadMap") }} method="POST" enctype="multipart/form-data">
-				<label for="image" id="drop-area">
-					<input type="file" accept="image/*" id="image" name="image">
-					<div id="img-view">
-						<img src="../static/images/upload.png" alt="UploadImage">
-						<p>Upload an image of your campaings map.</p>
-					</div>
-				</label>
-				
-				<button type="submit" class="btn btn-primary">Upload</button>
-			</form>
+			{% if map_Image %}
+			
+				<img src="{{% map_image %}}">
+			
+			{% else %}
+				<form action={{ url_for("uploadMap") }} method="POST" enctype="multipart/form-data">
+					<label for="image" id="drop-area">
+						<input type="file" accept="image/*" id="image" name="image">
+						<div id="img-view">
+							<img src="../static/images/upload.png" alt="UploadImage">
+							<p>Upload an image of your campaings map.</p>
+						</div>
+					</label>
+					
+					<button type="submit" class="btn btn-primary">Upload</button>
+				</form>
+			{% endif %}
 		</div>
 	</div>
 	<div class="col">
