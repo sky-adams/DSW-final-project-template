@@ -67,6 +67,7 @@ def home():
         recentEvents = getRecentPosts()
         gitHubID = session['user_data']['login']
         #TODO fix edgecase if user signed in but no character
+        #TODO make it so you can leave a party
         currentParty = loadCharacterData(gitHubID)["CurrentParty"]
         return render_template('home.html', recent_events=recentEvents, current_party=currentParty)
     else:
