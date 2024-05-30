@@ -390,6 +390,11 @@ def uploadMap():
             return redirect(request.url)
                    
     return redirect("/page1")  
+    
+    
+def downloadImage(partyTag):
+    image = fs.get_last_version(party=partyTag)
+    return(image)
 
 
 def uploadImage(image, imageName, partyTag):
