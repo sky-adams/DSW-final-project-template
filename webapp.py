@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for, session, request, jsonify, render_template, flash
+from flask import Flask, redirect, url_for, session, request, jsonify, render_template, flash, Response
 from markupsafe import Markup
 from flask_apscheduler import APScheduler
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -6,7 +6,7 @@ from flask_oauthlib.client import OAuth
 from bson.objectid import ObjectId
 from flask_socketio import SocketIO, send, emit, join_room, leave_room
 from bson.objectid import ObjectId
-
+from flask_pymongo import PyMongo
 #TODO Check why log out check is not working and why submitting when logged out on summary adds a message
 
 import pprint
@@ -16,11 +16,14 @@ import pymongo
 import gridfs
 import sys
 import datetime
+import codecs
  
 app = Flask(__name__)
 
 app.debug = True #Change this to False for production
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1' #Remove once done debugging
+
+app.config['MONGO_URI'] = os.environ['MONGO_URI']
 
 app.secret_key = os.environ['SECRET_KEY'] #used to sign session cookies
 oauth = OAuth(app)
@@ -43,6 +46,7 @@ github = oauth.remote_app(
 #Connect to database
 url = os.environ["MONGO_CONNECTION_STRING"]
 client = pymongo.MongoClient(url)
+
 #Test from StackOverflow
 #imageDBConnect = client.Images
 
@@ -60,7 +64,9 @@ try:
 except Exception as e:
     print(e)
 
-imagesFS = gridfs.GridFS(ImagesDB)
+
+mongo = PyMongo(app)
+imagesFS = gridfs.GridFS(mongo.db)
 #context processors run before templates are rendered and add variable(s) to the template's context
 #context processors must return a dictionary 
 #this context processor adds the variable logged_in to the conext for all templates
@@ -362,13 +368,12 @@ def renderPage1():
     if 'user_data' in session:
         gitHubID = session['user_data']['login']
         currentParty = loadCharacterData(gitHubID)["CurrentParty"]
-        
-        mapImage = downloadImage(currentParty)
-        
-        user_data_pprint = pprint.pformat(session['user_data'])#format the user data nicely
+        isDM = loadCharacterData(gitHubID)["DMaster"]
+        return render_template('page1.html', current_Party=currentParty, is_dm=isDM)
     else:
-        user_data_pprint = '';
-    return render_template('page1.html',dump_user_data=user_data_pprint, map_Image=mapImage)
+        currentParty = ''
+        user_data_pprint = ''
+        return render_template('page1.html',dump_user_data=user_data_pprint, current_Party=currentParty)
 
 
 @app.route('/uploadMapImage', methods=['GET', 'POST'])
@@ -394,12 +399,22 @@ def uploadMap():
                    
     return redirect("/page1")  
     
-    
-def downloadImage(partyTag):
+@app.route('/file/<partyTag>')
+def file(partyTag):
     doc = imagesFS.find_one({"party": partyTag})
-    name = doc["filename"]
-    image = imagesFS.get_last_version(filename=name, party=partyTag)
-    return(image)
+    if doc:
+        file_data = imagesFS.get(doc._id)
+        if file_data:
+            return Response(file_data, mimetype=file_data.content_type, direct_passthrough=True)
+        else:
+            error = "Did not find file."
+            print(error)
+            return(error)
+    else:
+        error = "Did not find any doc."
+        print(error)
+        return(error)
+    
 
 
 def uploadImage(image, imageName, partyTag):

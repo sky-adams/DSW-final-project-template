@@ -11,30 +11,22 @@
 <div class="row">
 	<div class="col">
 		<div class="Map">
-			{% if map_Image %}
 			
-				<img src="{{% map_image %}}">
+			<img src="{{url_for('file', partyTag=current_Party)}}" alt="{{current_Party}}">
 			
-			{% else %}
+			{% if is_dm == True %}
 				<form action={{ url_for("uploadMap") }} method="POST" enctype="multipart/form-data">
 					<label for="image" id="drop-area">
-						<input type="file" accept="image/*" id="image" name="image">
+						<input type="file" accept="image/*" id="image" name="image" hidden>
 						<div id="img-view">
 							<img src="../static/images/upload.png" alt="UploadImage">
-							<p>Upload an image of your campaings map.</p>
+							<p>Click to upload an image of your campaings map.</p>
 						</div>
 					</label>
 					
 					<button type="submit" class="btn btn-primary">Upload</button>
 				</form>
 			{% endif %}
-		</div>
-	</div>
-	<div class="col">
-		<div class="background">
-			<pre>
-				{{ dump_user_data }}
-			</pre>
 		</div>
 	</div>
 </div>
