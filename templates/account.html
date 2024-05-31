@@ -5,10 +5,10 @@
 {% block title %}Account{% endblock %}
 
 {% block content %}
-	<div class="row">
+	<div class="row ">
 		{% if character_data %}
 			<h1>This is your account</h1>
-
+			<p>{{ session['user_data']['login'] }} </p>
 			<p>{{ character_data }}</p>
 			<br><br>
 			<h1>Edit Info:</h1>
