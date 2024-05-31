@@ -7,7 +7,6 @@ wheel
 gunicorn
 Flask-OAuthlib
 Flask-PyMongo
-pymongo
+pymongo>=4.0
 Flask_APScheduler
 flask_socketio
-bson.objectid
