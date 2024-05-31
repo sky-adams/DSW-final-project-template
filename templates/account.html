@@ -5,11 +5,15 @@
 {% block title %}Account{% endblock %}
 
 {% block content %}
-	<div class="row">
+	<div class="row ">
 		{% if character_data %}
 			<h1>This is your account</h1>
-
-			<p>{{ character_data }}</p>
+			<p>ID: {{ character_data.GitHubID }}</p>
+			<p>Name: {{ character_data.Name }}</p>
+			<p>Class: {{ character_data.Class }}</p>
+			<p>Level: {{ character_data.Level }}</p>
+			<p>Dungeon Master:{{ character_data.DMaster }}</p>
+			<p>Current Party: {{ character_data.CurrentParty }}</p>
 			<br><br>
 			<h1>Edit Info:</h1>
 			<form action={{ url_for("renderUpdateCharacter") }} method="POST">

@@ -71,7 +71,7 @@ def home():
         currentParty = loadCharacterData(gitHubID)["CurrentParty"]
         return render_template('home.html', recent_events=recentEvents, current_party=currentParty)
     else:
-        message = 'Please Log in.'
+        message = 'Welcome!'
         return render_template('message.html', message=message)
 def getRecentPosts():
     sumPosts = ""
@@ -246,6 +246,7 @@ def renderAccountPage():
         if characters.find_one({"GitHubID": gitHubID}):
             gitHubID = session['user_data']['login']
             characterData=loadCharacterData(gitHubID)
+            
             return render_template('account.html',character_data=characterData)
         else:
             return render_template('account.html')
