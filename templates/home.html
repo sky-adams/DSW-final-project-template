@@ -5,9 +5,20 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<div class="background"
-  <h1>Home</h1>
+{% if current_party != None%}
+	<div>
+	  <h1>Home</h1>
 
-  <p>Recent Events</p>
-</div>
+		
+
+	  <p>Recent Events</p>
+	  
+	  <ul class="scroll2">
+	  {{recent_events}}
+	  </ul>
+	  
+	</div>
+{%else%}
+	<h1 class="background"> Welcome!</h1>
+{%endif%}
 {% endblock %}

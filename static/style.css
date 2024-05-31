@@ -40,14 +40,50 @@
 body{
 	background: #202020;
 	font-family: garamond;
-	font-weight: bold;
 	
 }
+
+.nav-link{
+	font-size: 20px;
+}
+
+h5{
+	font-size:50px;
+}
+
+p{
+	font-size:50px;
+	background-color: #D9D9D9;
+}
+
+label {
+	font-size: 30px;
+}
+
+.scroll2{
+	width:40%;
+	max-height:600px;
+	overflow: auto;
+
+}
+
+.scroll{
+	width:100%;
+	max-height:400px;
+	overflow: auto;
+	display:flex;
+	flex-direction: column-reverse;
+}
+
+input {
+		overflow: auto;
+        width: 80%;
+		height: auto;
+    }
 
 .content{
 	font-family: garamond;
 	font-weight: bold;
-	
 }
 
 .row{

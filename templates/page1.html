@@ -8,6 +8,7 @@
 
 {% block content %}
 <h1>Campaign</h1>
+{% if current_party != None%}
 <div class="row">
 	<div class="col">
 		<div class="Map">
@@ -29,5 +30,21 @@
 			{% endif %}
 		</div>
 	</div>
+
+
+ <div class="background">
+  <h1>This is Page 1</h1>
+
+  <p>Party Location:</p>
+  <p>Party Items </p>
+
+  <pre>
+    {{ dump_user_data }}
+  </pre>
 </div>
+
+{%else%}
+	<h1> Welcome!</h1>
+{%endif%}
+
 {% endblock %}
