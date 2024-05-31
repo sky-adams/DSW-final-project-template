@@ -435,9 +435,13 @@ def file(partyTag):
 
 
 def uploadImage(image, imageName, partyTag):
-        
-    imagesFS.put(image, filename=imageName, party=partyTag)
-        
+    doc = imagesFS.find_one({"party": partyTag})
+    if doc:   
+        fileDelete = imagesFS.get(doc._id)
+        imagesFS.delete(doc._id)
+        imagesFS.put(image, filename=imageName, party=partyTag)
+    else:
+        imagesFS.put(image, filename=imageName, party=partyTag)
 #https://www.youtube.com/watch?v=6WruncSoCdI
 if __name__ == '__main__':
     socketio.run(app)
