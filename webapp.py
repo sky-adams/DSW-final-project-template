@@ -196,7 +196,7 @@ def getPosts(current_Party):
     sumInput = ""
     
     for doc in posts.find({"PartyTag": current_Party}):
-        sumInput = sumInput + Markup("<li>" + "<h5>" + str(doc["Head"]) + "</h5>" + "<p>" + str(doc["Body"]) + "</p>" + "</li>")   
+        sumInput = Markup("<li>" + "<h5>" + str(doc["Head"]) + "</h5>" + "<p>" + str(doc["Body"]) + "</p>" + "</li>") + sumInput   
     
     print(sumInput)
     return(sumInput)
