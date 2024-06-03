@@ -3,14 +3,17 @@
 {% set active_page = "page1" %}
 
 
-{% block header %}{% endblock %}
+{% block header %}  {% endblock %}
 {% block title %}page1{% endblock %}
 
 {% block content %}
 <h1>Campaign</h1>
+<canvas></canvas>
 {% if current_party != None%}
+
 <div class="row">
 	<div class="col">
+		
 		<div class="Map">
 			<img src="{{url_for('file', partyTag=current_Party)}}" alt="{{current_Party}}" id="MapImage">
 		</div>
@@ -46,4 +49,5 @@
 	{%endif%}
 	</div>
 </div>
+<script src="{{ url_for('static', filename='script.js') }}"> </script>
 {% endblock %}
