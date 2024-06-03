@@ -47,6 +47,15 @@ body{
 	font-size: 20px;
 }
 
+.no-background{
+	background: none;
+}
+
+.small-text{
+	font-size: 20px;
+}
+
+
 h5{
 	font-size:50px;
 }
@@ -58,6 +67,7 @@ p{
 
 label {
 	font-size: 30px;
+	background-color: #D9D9D9;
 }
 
 .scroll2{
