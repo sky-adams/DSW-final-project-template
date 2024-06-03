@@ -12,6 +12,7 @@
 #MapImage{
 	width: 100%;
 	min-width:400px;
+	border-radius: 20px;
 }
 
 #drop-area{
@@ -36,6 +37,14 @@
 }
 /*End of Space 1*/
 
+.hideScroll::-webkit-scrollbar{
+	display: none;
+}
+
+.hideScroll{
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
 
 /*Space 2*/
 
@@ -58,12 +67,16 @@ p{
 	background-color: #D9D9D9;
 }
 
+.accent1{
+	background-color: #696868;
+}
+
 label {
 	font-size: 30px;
 }
 
 .scroll2{
-	width:40%;
+	width:100%;
 	max-height:600px;
 	overflow: auto;
 
@@ -73,7 +86,7 @@ label {
 	width:100%;
 	max-height:400px;
 	overflow: auto;
-	display:flex;
+	#display:flex;
 }
 
 input {

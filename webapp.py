@@ -82,14 +82,15 @@ def home():
         #TODO make it so you can leave a party
         currentParty = loadCharacterData(gitHubID)["CurrentParty"]
         recentEvents = getPosts(currentParty)
-        return render_template('home.html', recent_events=recentEvents, current_party=currentParty)
+        return render_template('home.html', recent_events=recentEvents, current_Party=currentParty)
     else:
         message = 'Welcome!'
         return render_template('message.html', message=message)
 
 #redirect to GitHub's OAuth page and confirm callback URL
 @app.route('/login')
-def login():   
+def login():
+    
     return github.authorize(callback=url_for('authorized', _external=True, _scheme='http')) #callback URL must match the pre-configured callback URL
 
 @app.route('/logout')
