@@ -21,7 +21,7 @@
 	  		<a {% if active_page == "SummaryInput" %} class="nav-link active"{% else %}class="nav-link"{% endif %} href="/SummaryInput"></a>
         </li>
 		{% if logged_in %}
-	    	<li><span class="navbar-text list">Github userid: {{ session['user_data']['login']}}</span></li>
+	    	<li class="nav-item list">{{ session['user_data']['login']}}</li>
 	    	<li class="nav-item list"><a class="nav-link" href="/logout">Logout</a></li>
 		{% else %}
 	    	<li class="nav-item list"><a class="nav-link" href="/login">Login</a></li>
@@ -29,3 +29,5 @@
 	 </ul>
     </div>
   </nav>
+  <br>
+  <br>
