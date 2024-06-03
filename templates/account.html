@@ -7,46 +7,51 @@
 {% block content %}
 	<div class="row background">
 		{% if character_data %}
-			<h1>This is your account</h1>
-			<p>ID: {{ character_data.GitHubID }}</p>
-			<p>Name: {{ character_data.Name }}</p>
-			<p>Class: {{ character_data.Class }}</p>
-			<p>Level: {{ character_data.Level }}</p>
-			<p>Dungeon Master:{{ character_data.DMaster }}</p>
-			<p>Current Party: {{ character_data.CurrentParty }}</p>
-			<br><br>
-			<h1>Edit Info:</h1>
-			<form action={{ url_for("renderUpdateCharacter") }} method="POST">
-				<label for="level">Level:</label>
-				<input type="number" id="level" name="level"><br><br>
-				<input type="submit" value="Submit">
-			</form>
-		
-		
-		
+		<div class="col">	
+				<h1>This is your account</h1>
+				<p>ID: {{ character_data.GitHubID }}</p>
+				<p>Name: {{ character_data.Name }}</p>
+				<p>Class: {{ character_data.Class }}</p>
+				<p>Level: {{ character_data.Level }}</p>
+				<p>Dungeon Master:{{ character_data.DMaster }}</p>
+				<p>Current Party: {{ character_data.CurrentParty }}</p>
+				<br><br>
+				<h1>Edit Info:</h1>
+				<form action={{ url_for("renderUpdateCharacter") }} method="POST">
+					<label for="level">Level:</label>
+					<input type="number" id="level" name="level"><br><br>
+					<input type="submit" value="Submit">
+				</form>
+		</div>
 		{% else %}
-			<form action={{ url_for("renderAccountCreation") }} method="POST">
-				<label for="name">Name Of Your Character:</label>
-				<input type="text" id="name" name="name"><br><br>
-				<label for="class">Class Type:</label>
-				<input type="text" id="class" name="class"><br><br>
-				<label for="level">Level:</label>
-				<input type="number" id="level" name="level"><br><br>
-				<input type="checkbox" id="DMaster" name="DMaster" value="DMaster">
-				<label for="DMaster">Are you your party's Dungeon Master?</label><br>
-				<input type="submit" value="Submit">
-			</form>
+		<div class="col">	
+				<form action={{ url_for("renderAccountCreation") }} method="POST">
+					<label for="name">Name Of Your Character:</label>
+					<input type="text" id="name" name="name"><br><br>
+					<label for="class">Class Type:</label>
+					<input type="text" id="class" name="class"><br><br>
+					<label for="level">Level:</label>
+					<input type="number" id="level" name="level"><br><br>
+					<input type="checkbox" id="DMaster" name="DMaster" value="DMaster">
+					<label for="DMaster">Are you your party's Dungeon Master?</label><br>
+					<input type="submit" value="Submit">
+				</form>
+		</div>
 		{% endif %}
-	</div>
-	<div class="row">
-		<form action={{ url_for("renderCreateParty") }} method="POST">
-			<label for="Submit">Create a party.</label><br>
-			<input type="submit" value="Submit" id="Submit">
-		</form>
 		
-		<form action={{ url_for("renderPartySelection") }} method="POST">
-			<label for="Submit">Join a party.</label><br>
-			<input type="submit" value="Submit" id="Submit">
-		</form>
+		<div class="col">
+			<form action={{ url_for("renderCreateParty") }} method="POST">
+				<label for="Submit">Create a party.</label><br>
+				<input type="submit" value="Submit" id="Submit">
+			</form>
+		</div>
+		<div class="col">
+			<form action={{ url_for("renderPartySelection") }} method="POST">
+				<label for="Submit">Join a party.</label><br>
+				<input type="submit" value="Submit" id="Submit">
+			</form>
+		</div>
+		
 	</div>
+	
 {% endblock %}

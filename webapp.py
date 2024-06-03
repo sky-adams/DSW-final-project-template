@@ -77,22 +77,15 @@ def inject_logged_in():
 @app.route('/')
 def home():
     if 'user_data' in session:
-        recentEvents = getRecentPosts()
         gitHubID = session['user_data']['login']
         #TODO fix edgecase if user signed in but no character
         #TODO make it so you can leave a party
         currentParty = loadCharacterData(gitHubID)["CurrentParty"]
+        recentEvents = getPosts(currentParty)
         return render_template('home.html', recent_events=recentEvents, current_party=currentParty)
     else:
         message = 'Welcome!'
         return render_template('message.html', message=message)
-def getRecentPosts():
-    sumPosts = ""
-    
-    for doc in posts.find():
-        sumPosts = Markup("<li>" + "<h5>" + str(doc["Head"]) + "</h5>" + "<p>" + str(doc["Body"]) + "</p>" + "</li>") + sumPosts 
-    print(sumPosts)
-    return(sumPosts)
 
 #redirect to GitHub's OAuth page and confirm callback URL
 @app.route('/login')
