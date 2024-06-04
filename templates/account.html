@@ -5,24 +5,27 @@
 {% block title %}Account{% endblock %}
 
 {% block content %}
-	<div class="row background">
+	<div class="row">
 		{% if character_data %}
 		<div class="col">	
-				<h1>This is your account</h1>
-				<p>ID: {{ character_data.GitHubID }}</p>
-				<p>Name: {{ character_data.Name }}</p>
-				<p>Class: {{ character_data.Class }}</p>
-				<p>Level: {{ character_data.Level }}</p>
-				<p>Dungeon Master:{{ character_data.DMaster }}</p>
-				<p>Current Party: {{ character_data.CurrentParty }}</p>
-				<br><br>
-				<h1>Edit Info:</h1>
-				<form action={{ url_for("renderUpdateCharacter") }} method="POST">
-					<label for="level">Level:</label>
-					<input type="number" id="level" name="level"><br><br>
-					<input type="submit" value="Submit">
-				</form>
+        <h1 class="background">This is your account</h1>
+        <div class="background">
+        <p>ID: {{ character_data.GitHubID }}</p>
+        <p>Name: {{ character_data.Name }}</p>
+        <p>Class: {{ character_data.Class }}</p>
+        <p>Level: {{ character_data.Level }}</p>
+        <p>Dungeon Master:{{ character_data.DMaster }}</p>
+        <p>Current Party: {{ character_data.CurrentParty }}</p>
+        <br><br>
+          <h1>Edit Info:</h1>
+        <form action={{ url_for("renderUpdateCharacter") }} method="POST">
+          <label for="level">Level:</label>
+          <input type="number" id="level" name="level"><br><br>
+          <input type="submit" value="Submit">
+        </form>
+      </div>
 		</div>
+      
 		{% else %}
 		<div class="col">	
 				<form action={{ url_for("renderAccountCreation") }} method="POST">

@@ -6,18 +6,14 @@
 
 {% block content %}
 
-  <h1>This is the Summary page</h1>
-
-<form action={{ url_for("submitSummeryInput") }} method="POST">
-  <input type="text" name="headInput">
-  <input type="text" name="bodyInput">
-  <input type="submit" class="submit" value="Submit">
-</form> 
-
-
-  <p>if user is admin
-  , text input field, 
-   button redirect?
-   </p>
-
+  <h1 class="background">This is the Summary page</h1>
+<div class="p-3 background">
+	<form action={{ url_for("submitSummeryInput") }} method="POST">
+		<label for="Submit" class="small-text">Heading:</label>
+		<input type="text" name="headInput"><br>
+		<label for="Submit" class="small-text">Body:</label>
+		<input type="text" name="bodyInput">
+		<input type="submit" class="submit" value="Submit">
+	</form> 
+</div>
 {% endblock %}
