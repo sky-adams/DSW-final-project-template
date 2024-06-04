@@ -158,4 +158,10 @@ li{
 	
 }
 
+@media (min-width: 1400px) {
+	.container{
+		max-width: 100%;
+	}
+}
+    
 /*End of Space 2*/
