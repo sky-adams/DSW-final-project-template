@@ -77,26 +77,20 @@ def inject_logged_in():
 @app.route('/')
 def home():
     if 'user_data' in session:
-        recentEvents = getRecentPosts()
         gitHubID = session['user_data']['login']
         #TODO fix edgecase if user signed in but no character
         #TODO make it so you can leave a party
         currentParty = loadCharacterData(gitHubID)["CurrentParty"]
-        return render_template('home.html', recent_events=recentEvents, current_party=currentParty)
+        recentEvents = getPosts(currentParty)
+        return render_template('home.html', recent_events=recentEvents, current_Party=currentParty)
     else:
         message = 'Welcome!'
         return render_template('message.html', message=message)
-def getRecentPosts():
-    sumPosts = ""
-    
-    for doc in posts.find():
-        sumPosts = Markup("<li>" + "<h5>" + str(doc["Head"]) + "</h5>" + "<p>" + str(doc["Body"]) + "</p>" + "</li>") + sumPosts 
-    print(sumPosts)
-    return(sumPosts)
 
 #redirect to GitHub's OAuth page and confirm callback URL
 @app.route('/login')
-def login():   
+def login():
+    
     return github.authorize(callback=url_for('authorized', _external=True, _scheme='http')) #callback URL must match the pre-configured callback URL
 
 @app.route('/logout')
@@ -203,7 +197,7 @@ def getPosts(current_Party):
     sumInput = ""
     
     for doc in posts.find({"PartyTag": current_Party}):
-        sumInput = sumInput + Markup("<li>" + "<h5>" + str(doc["Head"]) + "</h5>" + "<p>" + str(doc["Body"]) + "</p>" + "</li>")   
+        sumInput = Markup("<li>" + "<h5>" + str(doc["Head"]) + "</h5>" + "<p>" + str(doc["Body"]) + "</p>" + "</li>") + sumInput   
     
     print(sumInput)
     return(sumInput)
@@ -442,8 +436,6 @@ def uploadImage(image, imageName, partyTag):
         imagesFS.put(image, filename=imageName, party=partyTag)
     else:
         imagesFS.put(image, filename=imageName, party=partyTag)
-
-        
 #https://www.youtube.com/watch?v=6WruncSoCdI
 if __name__ == '__main__':
     socketio.run(app)

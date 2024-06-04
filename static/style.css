@@ -2,18 +2,22 @@
 
 .Map{
 	width: 100%;
+	/*
 	min-height: 100vh;
-	background: linear-gradient(#e7baff, #c2b6d9);
 	display: flex;
 	align-items: center;
-	justify-content: center;
-	
-	
+	justify-content: center;*/
 }
+
+#MapImage{
+	width: 100%;
+	min-width:400px;
+	border-radius: 20px;
+}
+
 #drop-area{
 	width: 500px;
 	height: 300px;
-	padding: 30px;
 	background: #fff;
 	text-align: center;
 	border-radius: 20px;
@@ -30,10 +34,17 @@
 
 #img-view img{
 	width: 100px;
-	margin-top: 25px;
 }
 /*End of Space 1*/
 
+.hideScroll::-webkit-scrollbar{
+	display: none;
+}
+
+.hideScroll{
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
 
 /*Space 2*/
 
@@ -66,6 +77,10 @@ p{
 	border-radius: 5px;
 }
 
+.accent1{
+	background-color: #696868;
+}
+
 label {
 	font-size: 30px;
 	background-color: #D9D9D9;
@@ -78,7 +93,7 @@ line-height: 35px;
 
 
 .scroll2{
-	width:40%;
+	width:100%;
 	max-height:600px;
 	overflow: auto;
 
@@ -88,8 +103,7 @@ line-height: 35px;
 	width:100%;
 	max-height:500px;
 	overflow: auto;
-	display:flex;
-	flex-direction: column-reverse;
+	#display:flex;
 }
 
 input {

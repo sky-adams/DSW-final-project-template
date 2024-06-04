@@ -6,15 +6,22 @@
 
 {% block content %}
 {% if current_party != None%}
-	<div>
-	  <h1 class="background">Home</h1>
-	  
-	  <p>Recent Events</p>
-	  
-	  <ul class="scroll2">
-	  {{recent_events}}
-	  </ul>
-	  
+	<div class="row background">
+		<h1>Home</h1>
+	</div>
+	<div class="row">
+		<div class="col accent1">
+			<h1>Recent Events</h1>
+			<ul class="scroll2 hideScroll">
+				{{recent_events}}
+			</ul>
+		</div>
+		
+		<div class="col pt-5">
+			<div class="Map">
+				<img src="{{url_for('file', partyTag=current_Party)}}" alt="{{current_Party}}" id="MapImage">
+			</div>
+		</div>
 	</div>
 {%else%}
 	<h1 class="background"> Welcome!</h1>
