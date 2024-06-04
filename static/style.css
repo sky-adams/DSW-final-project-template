@@ -63,12 +63,19 @@ h5{
 p{
 	font-size:50px;
 	background-color: #D9D9D9;
+	border-radius: 5px;
 }
 
 label {
 	font-size: 30px;
 	background-color: #D9D9D9;
 }
+
+.navbar .navbar-nav > li > a {
+line-height: 35px;
+ }
+ 
+
 
 .scroll2{
 	width:40%;
@@ -79,7 +86,7 @@ label {
 
 .scroll{
 	width:100%;
-	max-height:400px;
+	max-height:500px;
 	overflow: auto;
 	display:flex;
 	flex-direction: column-reverse;
@@ -99,6 +106,13 @@ input {
 
 .background{
 	background-color: #D9D9D9;
+	border-radius: 5px;
+}
+
+.base{
+	background-color: #5A5A5A;
+	width: 100%;
+	height: auto;
 }
 
 ul {
@@ -117,9 +131,16 @@ li{
     background-color: #D9D9D9;
  }
  
+.navbar-text {
+	color: #5A5A5A;
+	font-weight: bold;
+	font-size: 20px;
+} 
+ 
 .list {
 	background-color: #5A5A5A;
 	border-radius: 5px;
+	margin-right: 10px;
 	
 }
 

@@ -5,9 +5,10 @@
 {% block title %}Account{% endblock %}
 
 {% block content %}
-	<div class="row background">
+	<div class="row">
 		{% if character_data %}
-			<h1>This is your account</h1>
+			<h1 class="background">This is your account</h1>
+			<div class="background">
 			<p>ID: {{ character_data.GitHubID }}</p>
 			<p>Name: {{ character_data.Name }}</p>
 			<p>Class: {{ character_data.Class }}</p>
