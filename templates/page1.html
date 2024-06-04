@@ -32,24 +32,6 @@
 			<img src="{{url_for('file', partyTag=current_Party)}}" alt="{{current_Party}}" id="MapImage">
 		</div>
 	</div>
-
-{% if is_dm == True %}
-	<div class="col">
-		<form action={{ url_for("uploadMap") }} method="POST" enctype="multipart/form-data">
-		<br>
-			<label for="image" id="drop-area">
-			<br>
-				<input type="file" accept="image/*" id="image" name="image" hidden>
-				<div id="img-view">
-					<img src="../static/images/upload.png" alt="UploadImage">
-					<p>Click to upload an image of your campaign's map.</p>
-				</div>
-			</label>
-			<br>
-			<button type="submit" class="btn btn-primary">Upload</button>
-		</form>
-	</div>
-{% endif %}
 	<div class="col">
 		<div class="background">
 			<h1>This is Page 1</h1>
