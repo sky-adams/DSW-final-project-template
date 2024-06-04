@@ -6,6 +6,7 @@
 {% block header %}  {% endblock %}
 {% block title %}page1{% endblock %}
 {% block content %}
+<h1 class="background">Campaign</h1>
 {% if current_party != None%}
 <div class="row">
 
@@ -33,17 +34,26 @@
 		<br>
 			<label for="image" id="drop-area">
 			<br>
-				<input type="file" accept="image/*" id="image" name="image" hidden>
-				<div id="img-view">
-					<img src="../static/images/upload.png" alt="UploadImage">
-					<p>Click to upload an image of your campaign's map.</p>
-				</div>
-			</label>
 			<br>
-			<button type="submit" class="btn btn-primary">Upload</button>
-		</form>
+				<form action={{ url_for("uploadMap") }} method="POST" enctype="multipart/form-data">
+				<br>
+					<label for="image" id="drop-area">
+					<br>
+						<input type="file" accept="image/*" id="image" name="image" hidden>
+						<div id="img-view">
+							<img src="../static/images/upload.png" alt="UploadImage">
+							<p class="no-background">Click to upload an image of your campaign's map.</p>
+						</div>
+					</label>
+					<br>
+					<button type="submit" class="btn btn-primary">Upload</button>
+				</form>
+			{% endif %}
+			<img src="{{url_for('file', partyTag=current_Party)}}" alt="{{current_Party}}" id="MapImage">
+		</div>
 	</div>
 {% endif %}
+	</div>
 </div>
 <script src="{{ url_for('static', filename='script.js') }}"> </script>
 {% endblock %}

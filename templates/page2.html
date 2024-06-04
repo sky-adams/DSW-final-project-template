@@ -6,9 +6,11 @@
 
 {% block content %}
 {% if current_party != None%}
-    <ul id="list" class="background">
-	 {{ message_display }}
-	</ul>
+ <h1 class="background">Chat with your party:</h1>
+
+ <ul id="list" class="background container-fluid">
+    {{ message_display }}
+ </ul>
 
 
 	<script type="text/javascript" charset="utf-8">

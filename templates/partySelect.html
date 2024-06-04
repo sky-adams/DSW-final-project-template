@@ -6,19 +6,20 @@
 
 {% block content %}
 
-  <h1>Join a Party.</h1>
+  <h1 class="background">Join a Party.</h1>
   
   <ul> 
 	{{ party_List }}
   </u>
-
+<div class="p-3 background">
 <form action={{ url_for("renderPartyConnect") }} method="POST">
   <label for="Submit">Party Name:</label><br>
   <input type="text" name="PartyName"><br>
   <label for="Submit">Password:</label><br>
   <input type="text" name="Password"><br>
-  <input type="submit" class="submit" value="Submit">
+  <input type="submit" class="submit mt-3" value="Submit">
 </form> 
+</div>
 
 <h1>{{ message }}<h1>
 
