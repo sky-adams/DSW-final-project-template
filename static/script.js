@@ -11,7 +11,7 @@ canvas.height = 500;
 	var gkhead = new Image;
 
 	window.onload = function(){		
-			fitToContainer(canvas)
+			fitToContainer(canvas);
 		    var ctx = canvas.getContext('2d');
 		    trackTransforms(ctx);
 		  
@@ -26,7 +26,6 @@ canvas.height = 500;
 	}
 	
 	function redraw(){
-	     
           // Clear the entire canvas
           var p1 = ctx.transformedPoint(0,0);
           var p2 = ctx.transformedPoint(canvas.width,canvas.height);

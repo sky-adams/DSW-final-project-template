@@ -1,5 +1,10 @@
 /* Space 1*/
 
+#MapPan{
+	border: 2px dashed #696868;
+	border-radius: 20px;
+}
+
 .Map{
 	width: 100%;
 	/*
