@@ -15,34 +15,31 @@
 			<p>Party Location:</p>
 			<p>Party Items </p>
 		</div>
-
+		{% if is_dm == True %}
+		<div class="background">
+			<form action={{ url_for("uploadMap") }} method="POST" enctype="multipart/form-data">
+				<label for="image" id="drop-area">
+					<form action={{ url_for("uploadMap") }} method="POST" enctype="multipart/form-data">
+						<label for="image" id="drop-area">
+							<input type="file" accept="image/*" id="image" name="image" hidden>
+							<div id="img-view">
+								<img src="../static/images/upload.png" alt="UploadImage">
+								<p class="no-background">Click to upload an image of your campaign's map.</p>
+								<button type="submit" class="btn btn-primary">Upload</button>
+							</div>
+						</label>
+			</form>
+				{% endif %}
+		</div>
 		{%else%}
 			<h1> Welcome!</h1>
 		{%endif%}
 	</div>
-	<div class="col-xl" id="MapPan">
-		<canvas></canvas>
+	<div class="col-xl">
+		<canvas id="MapPan"></canvas>
 		<div class="Map">
 			<img src="{{url_for('file', partyTag=current_Party)}}" alt="{{current_Party}}" id="MapImage" hidden>
 		</div>
-	</div>
-</div>
-<div class="row">
-{% if is_dm == True %}
-	<div class="col-xl">
-		<form action={{ url_for("uploadMap") }} method="POST" enctype="multipart/form-data">
-			<label for="image" id="drop-area">
-				<form action={{ url_for("uploadMap") }} method="POST" enctype="multipart/form-data">
-					<label for="image" id="drop-area">
-						<input type="file" accept="image/*" id="image" name="image" hidden>
-						<div id="img-view">
-							<img src="../static/images/upload.png" alt="UploadImage">
-							<p class="no-background">Click to upload an image of your campaign's map.</p>
-						</div>
-					</label>
-					<button type="submit" class="btn btn-primary">Upload</button>
-				</form>
-			{% endif %}
 	</div>
 </div>
 <script src="{{ url_for('static', filename='script.js') }}"> </script>

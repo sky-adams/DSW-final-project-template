@@ -7,8 +7,8 @@ canvas.height = 500;
 
 
 
-	const MIN_ZOOM = 0.5;
-	const MAX_ZOOM = 2;
+	const MIN_ZOOM = 1.2;
+	const MAX_ZOOM = 3;
 	
 	var gkhead = new Image;
 
@@ -16,6 +16,7 @@ canvas.height = 500;
 			fitToContainer(canvas);
 		    var ctx = canvas.getContext('2d');
 		    trackTransforms(ctx);
+			
 		  
     
 	function fitToContainer(canvas){
@@ -55,21 +56,13 @@ canvas.height = 500;
           dragged = false;
       },false);
 
-      canvas.addEventListener('mousemove', function(evt) {
+        canvas.addEventListener('mousemove', function(evt) {
 			lastX = evt.offsetX || (evt.pageX - canvas.offsetLeft);
 			lastY = evt.offsetY || (evt.pageY - canvas.offsetTop);
 			dragged = true;
 			if (dragStart) {
-				var pt = ctx.transformedPoint(lastX, lastY);
-				const { maxX, maxY, minX, minY } = getTranslationLimits();
-				const newTranslateX = pt.x - dragStart.x;
-				const newTranslateY = pt.y - dragStart.y;
-
-				// Check if the new translation coordinates are within the allowed range
-				if (newTranslateX >= minX && newTranslateX <= maxX && newTranslateY >= minY && newTranslateY <= maxY) {
-					ctx.translate(pt.x - dragStart.x, pt.y - dragStart.y);
-				}
-
+				const pt = ctx.transformedPoint(lastX, lastY);
+				ctx.translate(pt.x - dragStart.x, pt.y - dragStart.y);
 				redraw();
 			}
 		}, false);
@@ -107,22 +100,6 @@ canvas.height = 500;
 	};
 
 	gkhead.src = document.getElementById("MapImage").src
-	
-	function getTranslationLimits() {
-		const imageWidth = gkhead.width;
-		const imageHeight = gkhead.height;
-		const canvasWidth = canvas.width;
-		const canvasHeight = canvas.height;
-		const scaleX = ctx.getTransform().a;
-		const scaleY = ctx.getTransform().d;
-
-		const maxX = (imageWidth * scaleX - canvasWidth) / 2;
-		const maxY = (imageHeight * scaleY - canvasHeight) / 2;
-		const minX = -maxX;
-		const minY = -maxY;
-
-		return { maxX, maxY, minX, minY };
-	}
 	
 	// Adds ctx.getTransform() - returns an SVGMatrix
 	// Adds ctx.transformedPoint(x,y) - returns an SVGPoint
@@ -188,4 +165,4 @@ canvas.height = 500;
       }
 	}
 	
-	https://www.perplexity.ai/search/How-would-I-fB2_Yl3fRHOcIlySxHaG1g#1
+	//https://www.perplexity.ai/search/How-would-I-fB2_Yl3fRHOcIlySxHaG1g#1
