@@ -78,11 +78,18 @@ def inject_logged_in():
 def home():
     if 'user_data' in session:
         gitHubID = session['user_data']['login']
-        #TODO fix edgecase if user signed in but no character
         #TODO make it so you can leave a party
-        currentParty = loadCharacterData(gitHubID)["CurrentParty"]
-        recentEvents = getPosts(currentParty)
-        return render_template('home.html', recent_events=recentEvents, current_Party=currentParty)
+        if characters.find_one({"GitHubID":gitHubID}):
+            currentParty = loadCharacterData(gitHubID)["CurrentParty"]
+            if currentParty != None:
+                recentEvents = getPosts(currentParty)
+                return render_template('home.html', recent_events=recentEvents, current_Party=currentParty)
+            else:
+                message = 'Please Join a Party.'
+                return render_template('message.html', message=message)
+        else:
+            message= 'Please make an account.'
+            return render_template('message.html', message=message)
     else:
         message = 'Welcome!'
         return render_template('message.html', message=message)
