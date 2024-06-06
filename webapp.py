@@ -265,9 +265,6 @@ def renderAccountCreation():
     Level=request.form['level']
     isDM = False
     Party = None
-    
-    if "DMaster" in request.form:
-        isDM = True
         
     characterData=createCharacterData(gitHubID, Name, Class, Level, isDM, Party)
    
@@ -295,12 +292,20 @@ def renderPartyConnect():
     Key = "CurrentParty"
     
     doc = partys.find_one({"Name": SelName})
+    
+    
     if doc == None:
         Error = "Name Incorrect"
         return render_template('partySelect.html', party_List=partysList, message=Error)
     
+    if doc["Name"] == loadCharacterData(gitHubID)["CurrentParty"]:
+        Error = "Already In Party."
+        return render_template('partySelect.html', party_List=partysList, message=Error)
+    
     if SelPassword == doc["Password"]:
         editCharacter(gitHubID, Key, SelName)
+        isDM = False
+        editCharacter(gitHubID, "DMaster", isDM)
         return redirect('/Account')
     else:
         Error = "Password Incorrect"
@@ -334,7 +339,11 @@ def submitPartyInput():
         return render_template('message.html', message=message)
     else:
         createparty = createParty(PName, Password)
-        editCharacter(gitHubID, CurrentParty, PName)
+        #Sets character party to new party.
+       
+        editCharacter(gitHubID, CurrentParty, PName) 
+        isDM = True
+        editCharacter(gitHubID, "DMaster", isDM)
     return redirect('/Account')    
    
 def createParty(name, password):

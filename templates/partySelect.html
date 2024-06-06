@@ -5,22 +5,28 @@
 {% block title %}Summary{% endblock %}
 
 {% block content %}
-
-  <h1 class="background">Join a Party.</h1>
-  
-  <ul> 
-	{{ party_List }}
-  </u>
-<div class="p-3 background">
-<form action={{ url_for("renderPartyConnect") }} method="POST">
-  <label for="Submit">Party Name:</label><br>
-  <input type="text" name="PartyName"><br>
-  <label for="Submit">Password:</label><br>
-  <input type="text" name="Password"><br>
-  <input type="submit" class="submit mt-3" value="Submit">
-</form> 
+<div class="row">
+	<div class="col p-3">
+	  <h1 class="background">Join a Party.</h1>
+	  
+	  <ul class="scroll hideScroll"> 
+		{{ party_List }}
+	  </ul>
+  </div>
 </div>
-
-<h1>{{ message }}<h1>
+<div class="row">
+	<div class="col p-3 background">
+			<form action={{ url_for("renderPartyConnect") }} method="POST">
+			  <label for="Submit">Party Name:</label><br>
+			  <input type="text" name="PartyName"><br>
+			  <label for="Submit">Password:</label><br>
+			  <input type="text" name="Password"><br>
+			  <input type="submit" class="submit mt-3" value="Submit">
+			</form> 
+		{%if message%}
+			<h1 class="alert alert-warning mt-5">{{ message }}<h1>
+		{%endif%}
+	</div>
+</div>
 
 {% endblock %}
