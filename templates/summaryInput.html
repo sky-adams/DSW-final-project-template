@@ -5,15 +5,15 @@
 {% block title %}Summary{% endblock %}
 
 {% block content %}
-
-  <h1 class="background">This is the Summary page</h1>
-<div class="p-3 background">
-	<form action={{ url_for("submitSummeryInput") }} method="POST">
-		<label for="Submit" class="small-text">Heading:</label>
-		<input type="text" name="headInput"><br>
-		<label for="Submit" class="small-text">Body:</label>
-		<input type="text" name="bodyInput">
-		<input type="submit" class="submit" value="Submit">
-	</form> 
+<div class="row">
+	<div class="p-3 background">
+		<form action={{ url_for("submitSummeryInput") }} method="POST">
+			<label for="Submit" class="small-text">Heading:</label><br>
+			<input type="text" name="headInput"><br>
+			<label for="Submit" class="small-text">Body:</label><br>
+			<input type="text" name="bodyInput"><br>
+			<button type="submit" class="btn btn-primary">Submit Post</button>
+		</form> 
+	</div>
 </div>
 {% endblock %}
