@@ -278,7 +278,14 @@ def renderCreateParty():
 def renderPartySelection(): 
     partys = getPartys()
     Error = ""
-    return render_template('partySelect.html', party_List=partys, message=Error) 
+    return render_template('partySelect.html', party_List=partys, message=Error)
+
+@app.route('/leaveParty', methods=['GET', 'POST'])
+def leaveParty():
+    gitHubID = session['user_data']['login']
+    currentParty = None
+    editCharacter(gitHubID, "CurrentParty", currentParty)
+    return redirect('/Account')
     
 @app.route('/PartyConnect', methods=['GET', 'POST'])
 def renderPartyConnect(): 
