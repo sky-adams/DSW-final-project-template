@@ -7,7 +7,7 @@
 {% block content %}
 	<div class="row">
 		{% if character_data %}
-		<div class="col-xl background">	
+		<div class="col-xl background marginAccount">	
         <h1 class="background">This is your account</h1>
         <div class="background">
         <p>ID: {{ character_data.GitHubID }}</p>
@@ -27,7 +27,7 @@
 		</div>
       
 		{% else %}
-		<div class="col-xl background">	
+		<div class="col-xl background marginAccount">	
 				<form action={{ url_for("renderAccountCreation") }} method="POST">
 					<label for="name">Name Of Your Character:</label>
 					<input type="text" id="name" name="name"><br><br>
@@ -42,7 +42,7 @@
 		</div>
 		{% endif %}
 		
-		<div class="col-xl background">
+		<div class="col-xl background marginAccount">
 			<div class="p-5 m-5 accent1">
 				<h1>Create a new party.</h1>
 				<form action={{ url_for("renderCreateParty") }} method="POST">
