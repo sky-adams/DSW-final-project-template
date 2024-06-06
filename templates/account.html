@@ -7,7 +7,7 @@
 {% block content %}
 	<div class="row">
 		{% if character_data %}
-		<div class="col">	
+		<div class="col-xl background marginAccount">	
         <h1 class="background">This is your account</h1>
         <div class="background">
         <p>ID: {{ character_data.GitHubID }}</p>
@@ -27,7 +27,7 @@
 		</div>
       
 		{% else %}
-		<div class="col">	
+		<div class="col-xl background marginAccount">	
 				<form action={{ url_for("renderAccountCreation") }} method="POST">
 					<label for="name">Name Of Your Character:</label>
 					<input type="text" id="name" name="name"><br><br>
@@ -42,18 +42,21 @@
 		</div>
 		{% endif %}
 		
-		<div class="col">
-			<form action={{ url_for("renderCreateParty") }} method="POST">
-				<label for="Submit">Create a party.</label><br>
-				<input type="submit" value="Submit" id="Submit">
-			</form>
+		<div class="col-xl background marginAccount">
+			<div class="p-5 m-5 accent1">
+				<h1>Create a new party.</h1>
+				<form action={{ url_for("renderCreateParty") }} method="POST">
+					<button type="submit" class="btn btn-primary">Create</button>
+				</form>
+			</div>
+			<div class="p-5  m-5 accent1">
+				<h1>Join a party.</h1>
+				<form action={{ url_for("renderPartySelection") }} method="POST">
+					<button type="submit" class="btn btn-primary">Join</button>
+				</form>
+			</div>
 		</div>
-		<div class="col">
-			<form action={{ url_for("renderPartySelection") }} method="POST">
-				<label for="Submit">Join a party.</label><br>
-				<input type="submit" value="Submit" id="Submit">
-			</form>
-		</div>
+			
 		
 	</div>
 	

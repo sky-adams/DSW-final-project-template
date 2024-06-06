@@ -7,6 +7,8 @@ canvas.height = 500;
 
 
 
+	const MIN_ZOOM = 1.2;
+	const MAX_ZOOM = 3;
 	
 	var gkhead = new Image;
 
@@ -14,6 +16,7 @@ canvas.height = 500;
 			fitToContainer(canvas);
 		    var ctx = canvas.getContext('2d');
 		    trackTransforms(ctx);
+			
 		  
     
 	function fitToContainer(canvas){
@@ -53,16 +56,16 @@ canvas.height = 500;
           dragged = false;
       },false);
 
-      canvas.addEventListener('mousemove',function(evt){
-          lastX = evt.offsetX || (evt.pageX - canvas.offsetLeft);
-          lastY = evt.offsetY || (evt.pageY - canvas.offsetTop);
-          dragged = true;
-          if (dragStart){
-            var pt = ctx.transformedPoint(lastX,lastY);
-            ctx.translate(pt.x-dragStart.x,pt.y-dragStart.y);
-            redraw();
-                }
-      },false);
+        canvas.addEventListener('mousemove', function(evt) {
+			lastX = evt.offsetX || (evt.pageX - canvas.offsetLeft);
+			lastY = evt.offsetY || (evt.pageY - canvas.offsetTop);
+			dragged = true;
+			if (dragStart) {
+				const pt = ctx.transformedPoint(lastX, lastY);
+				ctx.translate(pt.x - dragStart.x, pt.y - dragStart.y);
+				redraw();
+			}
+		}, false);
 
       canvas.addEventListener('mouseup',function(evt){
           dragStart = null;
@@ -71,14 +74,20 @@ canvas.height = 500;
 
       var scaleFactor = 1.1;
 
-      var zoom = function(clicks){
-          var pt = ctx.transformedPoint(lastX,lastY);
-          ctx.translate(pt.x,pt.y);
-          var factor = Math.pow(scaleFactor,clicks);
-          ctx.scale(factor,factor);
-          ctx.translate(-pt.x,-pt.y);
-          redraw();
-      }
+      var zoom = function(clicks) {
+		var pt = ctx.transformedPoint(lastX, lastY);
+		ctx.translate(pt.x, pt.y);
+		var factor = Math.pow(scaleFactor, clicks);
+		var newScale = ctx.getTransform().a * factor;
+
+		// Check if the new zoom level is within the allowed range
+		if (newScale >= MIN_ZOOM && newScale <= MAX_ZOOM) {
+			ctx.scale(factor, factor);
+		}
+
+		ctx.translate(-pt.x, -pt.y);
+		redraw();
+	}
 
       var handleScroll = function(evt){
           var delta = evt.wheelDelta ? evt.wheelDelta/40 : evt.detail ? -evt.detail : 0;
@@ -155,3 +164,5 @@ canvas.height = 500;
           return pt.matrixTransform(xform.inverse());
       }
 	}
+	
+	//https://www.perplexity.ai/search/How-would-I-fB2_Yl3fRHOcIlySxHaG1g#1
