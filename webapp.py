@@ -91,8 +91,9 @@ def home():
             message= 'Please make an account.'
             return render_template('message.html', message=message)
     else:
-        message = 'Welcome!'
-        return render_template('message.html', message=message)
+        userData = None
+        print(userData)
+        return render_template('home.html', user_Data=userData)
 
 #redirect to GitHub's OAuth page and confirm callback URL
 @app.route('/login')
