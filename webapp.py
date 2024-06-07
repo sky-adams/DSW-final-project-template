@@ -264,8 +264,8 @@ def renderAccountPage():
         if characters.find_one({"GitHubID": gitHubID}):
             gitHubID = session['user_data']['login']
             characterData=loadCharacterData(gitHubID)
-            
-            return render_template('account.html',character_data=characterData)
+            currentParty = loadCharacterData(gitHubID)["CurrentParty"]
+            return render_template('account.html',character_data=characterData, current_party=currentParty)
         else:
             return render_template('account.html')
     else:
@@ -295,6 +295,8 @@ def renderPartySelection():
     Error = ""
     return render_template('partySelect.html', party_List=partys, message=Error)
 
+
+#TODO only make it so it appears when you're in a part.
 @app.route('/leaveParty', methods=['GET', 'POST'])
 def leaveParty():
     gitHubID = session['user_data']['login']
