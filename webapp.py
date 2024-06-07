@@ -132,10 +132,18 @@ def authorized():
 def renderPage2():
     if 'user_data' in session:
         gitHubID = session['user_data']['login']
-        currentParty = loadCharacterData(gitHubID)["CurrentParty"]
-        message = getMessages(currentParty)
-        print(message)
-        return render_template('page2.html', message_display=message)
+        if characters.find_one({"GitHubID":gitHubID}):
+            currentParty = loadCharacterData(gitHubID)["CurrentParty"]
+            if currentParty != None:
+                message = getMessages(currentParty)
+                print(message)
+                return render_template('page2.html', message_display=message)
+            else:
+                message = 'Please Join a Party.'
+                return render_template('message.html', message=message)
+        else:
+            message= 'Please make an account.'
+            return render_template('message.html', message=message)
     else:
         message = 'Please Log in.'
         return render_template('message.html', message=message)
@@ -191,11 +199,18 @@ def on_join(data):
 def renderSummaryPage():
     if 'user_data' in session:
         gitHubID = session['user_data']['login']
-        isDM = loadCharacterData(gitHubID)["DMaster"]
-        currentParty = loadCharacterData(gitHubID)["CurrentParty"]
-        sumInput = getPosts(currentParty)
-        print(currentParty)
-        return render_template('summary.html', sum_Input=sumInput,is_DM=isDM, current_party=currentParty)
+        if characters.find_one({"GitHubID":gitHubID}):
+            currentParty = loadCharacterData(gitHubID)["CurrentParty"]
+            if currentParty != None:
+                sumInput = getPosts(currentParty)
+                isDM = loadCharacterData(gitHubID)["DMaster"]
+                return render_template('summary.html', sum_Input=sumInput,is_DM=isDM, current_party=currentParty)
+            else:
+                message = 'Please Join a Party.'
+                return render_template('message.html', message=message)
+        else:
+            message= 'Please make an account.'
+            return render_template('message.html', message=message)
     else:
         message = 'Please Log in.'
         return render_template('message.html', message=message)
@@ -401,13 +416,20 @@ def editCharacter(gitHubID, Key, Value):
 def renderPage1():
     if 'user_data' in session:
         gitHubID = session['user_data']['login']
-        currentParty = loadCharacterData(gitHubID)["CurrentParty"]
-        isDM = loadCharacterData(gitHubID)["DMaster"]
-        return render_template('page1.html', current_Party=currentParty, is_dm=isDM)
+        if characters.find_one({"GitHubID":gitHubID}):
+            currentParty = loadCharacterData(gitHubID)["CurrentParty"]
+            if currentParty != None:
+                isDM = loadCharacterData(gitHubID)["DMaster"]
+                return render_template('page1.html', current_Party=currentParty, is_dm=isDM)
+            else:
+                message = 'Please Join a Party.'
+                return render_template('message.html', message=message)
+        else:
+            message= 'Please make an account.'
+            return render_template('message.html', message=message)
     else:
-        currentParty = ''
-        user_data_pprint = ''
-        return render_template('page1.html',dump_user_data=user_data_pprint, current_Party=currentParty)
+       message = 'Please Log in.'
+       return render_template('message.html', message=message)
 
 
 @app.route('/uploadMapImage', methods=['GET', 'POST'])
