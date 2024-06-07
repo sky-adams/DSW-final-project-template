@@ -296,14 +296,32 @@ def renderPartySelection():
     Error = ""
     return render_template('partySelect.html', party_List=partys, message=Error)
 
-
-#TODO only make it so it appears when you're in a part.
 @app.route('/leaveParty', methods=['GET', 'POST'])
 def leaveParty():
     gitHubID = session['user_data']['login']
     currentParty = None
     editCharacter(gitHubID, "CurrentParty", currentParty)
     return redirect('/Account')
+    
+@app.route('/DeleteParty', methods=['GET', 'POST'])
+def DeleteParty():
+    gitHubID = session['user_data']['login']    
+    
+    #Sets all party members current party to none.
+    partyToDelete = loadCharacterData(gitHubID)["CurrentParty"]
+    MassChangeCharacters("CurrentParty", partyToDelete)
+    
+    #Sets DM's current party to none
+    currentParty = None
+    editCharacter(gitHubID, "CurrentParty", currentParty)
+
+  
+    return redirect('/Account')
+    
+def MassChangeCharacters(Key, Value):
+    changes = {'$set': {Key:None}}
+    characters.update_many({Key : Value}, changes)
+    
     
 @app.route('/PartyConnect', methods=['GET', 'POST'])
 def renderPartyConnect(): 
