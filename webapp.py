@@ -306,18 +306,28 @@ def leaveParty():
 @app.route('/DeleteParty', methods=['GET', 'POST'])
 def DeleteParty():
     gitHubID = session['user_data']['login']    
-    
-    #Sets all party members current party to none.
+   
     partyToDelete = loadCharacterData(gitHubID)["CurrentParty"]
+    print(partyToDelete)
+   
+    deleteParty(partyToDelete)
+
+    #Sets all party members current party to none.
+    
     MassChangeCharacters("CurrentParty", partyToDelete)
     
     #Sets DM's current party to none
     currentParty = None
     editCharacter(gitHubID, "CurrentParty", currentParty)
-
+    
   
     return redirect('/Account')
     
+def deleteParty(party):
+    print(party)
+    PartyToDelete = { "Name": party }
+    partys.delete_one(PartyToDelete)
+
 def MassChangeCharacters(Key, Value):
     changes = {'$set': {Key:None}}
     characters.update_many({Key : Value}, changes)
