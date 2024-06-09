@@ -20,7 +20,7 @@
 			<form action={{ url_for("leaveParty") }} method="POST" class="ms-4 input">
 				<button type="submit" class="btn btn-primary">Leave Party</button>
 			</form>
-			{% if is_DM != None %}
+			{% if is_DM == true %}
 			<form action={{ url_for("DeleteParty") }} method="POST" class="ms-4 input">
 				<button type="submit" class="btn btn-primary">Delete Party</button>
 			</form>
