@@ -38,17 +38,39 @@
       
 		{% else %}
 		<div class="col-xl background marginAccount">	
-				<form action={{ url_for("renderAccountCreation") }} method="POST">
-					<label for="name">Name Of Your Character:</label>
-					<input type="text" id="name" name="name"><br><br>
-					<label for="class">Class Type:</label>
-					<input type="text" id="class" name="class"><br><br>
-					<label for="level">Level:</label>
-					<input type="number" id="level" name="level"><br><br>
-					<!-- <input type="checkbox" id="DMaster" name="DMaster" value="DMaster">
-					<label for="DMaster">Are you your party's Dungeon Master?</label><br> -->
-					<input type="submit" value="Submit">
-				</form>
+			<form action={{ url_for("renderAccountCreation") }} method="POST">
+				<label for="name">Name Of Your Character:</label>
+				<input type="text" id="name" name="name"><br><br>
+
+				<label for="race">Race:</label>
+				<input type="text" id="race" name="race"><br><br>
+
+				<label for="class">Class:</label>
+				<input type="text" id="class" name="class"><br><br>
+
+				<h1>Abilites</h1>
+
+				<label for="strength">Strength:</label>
+				<input type="number" id="strength" name="strength"><br><br>
+
+				<label for="dexterity">Dexterity:</label>
+				<input type="number" id="dexterity" name="dexterity"><br><br>
+
+				<label for="constitution">Constitution:</label>
+				<input type="number" id="constitution" name="constitution"><br><br>
+
+				<label for="intelligence">Intelligence:</label>
+				<input type="number" id="intelligence" name="intelligence"><br><br>
+
+				<label for="wisdom">Wisdom:</label>
+				<input type="number" id="wisdom" name="wisdom"><br><br>
+
+				<label for="charisma">Charisma:</label>
+				<input type="number" id="charisma" name="charisma"><br><br>
+
+
+				<input type="submit" value="Submit">
+			</form>
 		</div>
 		{% endif %}
 		
