@@ -264,9 +264,11 @@ def renderAccountPage():
         
         if characters.find_one({"GitHubID": gitHubID}):
             gitHubID = session['user_data']['login']
+            isDM = loadCharacterData(gitHubID)["DMaster"]
+            print(isDM)
             characterData=loadCharacterData(gitHubID)
             currentParty = loadCharacterData(gitHubID)["CurrentParty"]
-            return render_template('account.html',character_data=characterData, current_party=currentParty)
+            return render_template('account.html',character_data=characterData, current_party=currentParty, is_DM=isDM)
         else:
             return render_template('account.html')
     else:
@@ -296,14 +298,64 @@ def renderPartySelection():
     Error = ""
     return render_template('partySelect.html', party_List=partys, message=Error)
 
-
-#TODO only make it so it appears when you're in a part.
 @app.route('/leaveParty', methods=['GET', 'POST'])
 def leaveParty():
     gitHubID = session['user_data']['login']
     currentParty = None
     editCharacter(gitHubID, "CurrentParty", currentParty)
     return redirect('/Account')
+    
+@app.route('/DeleteParty', methods=['GET', 'POST'])
+def DeleteParty():
+    gitHubID = session['user_data']['login']    
+   
+    partyToDelete = loadCharacterData(gitHubID)["CurrentParty"]
+
+    #Deletes The Party From Mongo
+    deleteParty(partyToDelete)
+
+    #Deletes all Data associated with deleted party on Mongo
+    #Messages
+    MessagesKey = "PartyTag"
+    MassDeleteDoc(partyToDelete, messages, MessagesKey)
+    #Summary
+    SummaryKey = "PartyTag"
+    MassDeleteDoc(partyToDelete, posts, SummaryKey)
+    #Images
+    deleteGridFSImage(partyToDelete)
+    #Sets all party members current party to none.
+    MassChangeCharacters("CurrentParty", partyToDelete)
+    
+    #Sets DM's current party to none
+    currentParty = None
+    editCharacter(gitHubID, "CurrentParty", currentParty)
+    
+  
+    return redirect('/Account')
+    
+def deleteGridFSImage(Party):
+    doc = imagesFS.find_one({"party": Party})
+    if doc:   
+        fileDelete = imagesFS.get(doc._id)
+        imagesFS.delete(doc._id)
+
+def deleteParty(Party):
+    print(Party)
+    PartyToDelete = { "Name": Party }
+    partys.delete_one(PartyToDelete)
+
+def MassChangeCharacters(Key, Value):
+    changes = {'$set': {Key:None}}
+    characters.update_many({Key : Value}, changes)
+
+def MassDeleteDoc(Party, DB, Key):
+    query = {Key: Party}
+
+    DeletedDocs = DB.delete_many(query)
+
+    print(DeletedDocs.deleted_count, " documents deleted.")
+
+    
     
 @app.route('/PartyConnect', methods=['GET', 'POST'])
 def renderPartyConnect(): 

@@ -16,10 +16,15 @@
         <p>Level: {{ character_data.Level }}</p>
         <p>Dungeon Master:{{ character_data.DMaster }}</p>
         <p>Current Party: {{ character_data.CurrentParty }}</p>
-		{% if current_party != None%}
+		{% if current_party != None %}
 			<form action={{ url_for("leaveParty") }} method="POST" class="ms-4 input">
 				<button type="submit" class="btn btn-primary">Leave Party</button>
 			</form>
+			{% if is_DM == true %}
+			<form action={{ url_for("DeleteParty") }} method="POST" class="ms-4 input">
+				<button type="submit" class="btn btn-primary">Delete Party</button>
+			</form>
+			{% endif %}
 		{% endif %}
         <br><br>
           <h1>Edit Info:</h1>
