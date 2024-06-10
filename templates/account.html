@@ -8,65 +8,92 @@
 	<div class="row">
 		{% if character_data %}
 		<div class="col-xl background marginAccount">	
-        <h1 class="background">This is your account</h1>
-        <div class="background">
-        <p>ID: {{ character_data.GitHubID }}</p>
-        <p>Name: {{ character_data.Name }}</p>
-        <p>Class: {{ character_data.Class }}</p>
-        <p>Level: {{ character_data.Level }}</p>
-        <p>Dungeon Master:{{ character_data.DMaster }}</p>
-        <p>Current Party: {{ character_data.CurrentParty }}</p>
-		{% if current_party != None %}
-			<form action={{ url_for("leaveParty") }} method="POST" class="ms-4 input">
-				<button type="submit" class="btn btn-primary">Leave Party</button>
-			</form>
-			{% if is_DM == true %}
-			<form action={{ url_for("DeleteParty") }} method="POST" class="ms-4 input">
-				<button type="submit" class="btn btn-primary">Delete Party</button>
-			</form>
-			{% endif %}
-		{% endif %}
-        <br><br>
-          <h1>Edit Info:</h1>
-        <form action={{ url_for("renderUpdateCharacter") }} method="POST">
-          <label for="level">Level:</label>
-          <input type="number" id="level" name="level"><br><br>
-          <input type="submit" value="Submit">
-        </form>
-      </div>
+				<div class="background">
+					<h1>Welcome, {{ character_data.GitHubID }}</h1>
+					<p>Character Name: {{ character_data.Name }}</p>
+					<p>Race: {{ character_data.Race }}</p>
+					<p>Class: {{ character_data.Class }}</p>
+
+					<h1>Abilities:</h1>
+					<p>Strength: {{ character_data.Strength }}</p>
+					<p>Dexterity: {{ character_data.Dexterity }}</p>
+					<p>Constitution: {{ character_data.Constitution }}</p>
+					<p>Intelligence: {{ character_data.Intelligence }}</p>
+					<p>Wisdom: {{ character_data.Wisdom }}</p>
+					<p>Charisma: {{ character_data.Charisma }}</p>
+
+
+					<p>Level: {{ character_data.Level }}</p>
+					<p>Dungeon Master:{{ character_data.DMaster }}</p>
+					{% if current_party != None %}
+						{% if is_DM == true %}
+						<form action={{ url_for("DeleteParty") }} method="POST" class="ms-4 input">
+							<button type="submit" class="btn btn-primary">Delete Party</button>
+						</form>
+						{% endif %}
+					{% endif %}
+					<br><br>
+					<h1>Edit Info:</h1>
+					<form action={{ url_for("renderUpdateCharacter") }} method="POST">
+						<label for="level">Level:</label>
+						<input type="number" id="level" name="level"><br><br>
+						<input type="submit" value="Submit">
+					</form>
+				</div>
 		</div>
-      
+
+			<div class="col-xl background marginAccount">
+				<h1>Current Party: {{ character_data.CurrentParty }}</h1>
+				{% if current_party != None %}
+				<form action={{ url_for("leaveParty") }} method="POST" class="ms-4 input">
+					<button type="submit" class="btn btn-primary">Leave Party</button>
+				</form>
+				{% endif %}
+
+				<div class="p-5 m-5 accent1">
+					<h1>Create a new party.</h1>
+					<form action={{ url_for("renderCreateParty") }} method="POST">
+						<button type="submit" class="btn btn-primary">Create</button>
+					</form>
+				</div>
+				<div class="p-5  m-5 accent1">
+					<h1>Join a party.</h1>
+					<form action={{ url_for("renderPartySelection") }} method="POST">
+						<button type="submit" class="btn btn-primary">Join</button>
+					</form>
+				</div>
+			</div>
 		{% else %}
 		<div class="col-xl background marginAccount">	
 			<form action={{ url_for("renderAccountCreation") }} method="POST">
 				<label for="name">Name Of Your Character:</label>
-				<input type="text" id="name" name="name"><br><br>
+				<input type="text" id="name" name="name" required><br><br>
 
-				<label for="race">Race:</label>
-				<input type="text" id="race" name="race"><br><br>
+				<label for="race">Race:</label><br><br>
+				<input type="text" id="race" name="race" required><br><br>
 
-				<label for="class">Class:</label>
-				<input type="text" id="class" name="class"><br><br>
+				<label for="class">Class:</label><br><br>
+				<input type="text" id="class" name="class" required><br><br>
 
 				<h1>Abilites</h1>
 
 				<label for="strength">Strength:</label>
-				<input type="number" id="strength" name="strength"><br><br>
+				<input type="number" id="strength" name="strength" required><br><br>
 
 				<label for="dexterity">Dexterity:</label>
-				<input type="number" id="dexterity" name="dexterity"><br><br>
+				<input type="number" id="dexterity" name="dexterity" required><br><br>
 
 				<label for="constitution">Constitution:</label>
-				<input type="number" id="constitution" name="constitution"><br><br>
+				<input type="number" id="constitution" name="constitution" required><br><br>
 
 				<label for="intelligence">Intelligence:</label>
-				<input type="number" id="intelligence" name="intelligence"><br><br>
+				<input type="number" id="intelligence" name="intelligence" required><br><br>
 
 				<label for="wisdom">Wisdom:</label>
-				<input type="number" id="wisdom" name="wisdom"><br><br>
+				<input type="number" id="wisdom" name="wisdom" required><br><br>
 
 				<label for="charisma">Charisma:</label>
-				<input type="number" id="charisma" name="charisma"><br><br>
+				<input type="number" id="charisma" name="charisma" required><br><br>
 
 
 				<input type="submit" value="Submit">
@@ -74,20 +101,7 @@
 		</div>
 		{% endif %}
 		
-		<div class="col-xl background marginAccount">
-			<div class="p-5 m-5 accent1">
-				<h1>Create a new party.</h1>
-				<form action={{ url_for("renderCreateParty") }} method="POST">
-					<button type="submit" class="btn btn-primary">Create</button>
-				</form>
-			</div>
-			<div class="p-5  m-5 accent1">
-				<h1>Join a party.</h1>
-				<form action={{ url_for("renderPartySelection") }} method="POST">
-					<button type="submit" class="btn btn-primary">Join</button>
-				</form>
-			</div>
-		</div>
+		
 			
 		
 	</div>

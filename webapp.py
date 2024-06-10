@@ -295,7 +295,7 @@ def renderAccountCreation():
         
     characterData=createCharacterData(gitHubID, Name, Race, Class, Strength, Dexterity, Constitution, Intelligence, Wisdom, Charisma ,Level, isDM, Party)
    
-    return render_template('account.html',character_data=characterData)
+    return render_template('account.html',character_data=characterData, current_party=None, is_DM=isDM)
 
 @app.route('/createParty', methods=['GET', 'POST'])
 def renderCreateParty(): 
