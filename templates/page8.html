@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block title %}Page 8: Birthday{% endblock %}
+
+{% block content %}
+
+
+  <h1>Page 8: Birthday:</h1>
+      <a href="/page1">Start over</a>
+
+ <form action={{ url_for("renderPage9") }} method="POST">
+  Birthday:<br>
+  <input type="text" name="birthday">
+  <input type="submit" value="Submit">
+  <br>
+ </form>
+
+{% endblock %}

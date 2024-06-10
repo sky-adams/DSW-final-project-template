@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block title %}Page 4: Favorite Color{% endblock %}
+
+{% block content %}
+
+
+  <h1>Page 1: Favorite Color:</h1>
+      <a href="/page1">Start over</a>
+
+ <form action={{ url_for("renderPage5") }} method="POST">
+  Favorite Color:<br>
+  <input type="text" name="favColor">
+  <input type="submit" value="Submit">
+  <br>
+ </form> 
+
+
+{% endblock %}

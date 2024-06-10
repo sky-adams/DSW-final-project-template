@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block title %}Page 3{% endblock %}
+
+{% block content %}
+
+
+  <h1>Informational Form</h1>
+
+<p>Please list your interests (hobbies, etc.)</p>
+
+<form action={{ url_for("renderForm2Page4") }} method="POST">
+
+{% endblock %}

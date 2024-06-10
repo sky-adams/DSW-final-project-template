@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+
+
+<li> Profile for {{session["firstName"]}} {{session["lastName"]}} </ul>
+<li>Interests {{"interests"]}} </ul>
+<li> Education {{session["education"]}} </ul>
+<li> Professional Experience {{session["professional"]}} </ul>
+
+<li>Vist your profile</ul>
+<link href="/logout">
+
+{% end block %}
