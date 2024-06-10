@@ -1,0 +1,36 @@
+  <!-- Navbar links -->
+	<ul class="nav flex-column">
+      <li class="nav-item">
+        <a {% if active_page == "home" %} class="nav-link active"{% else %}class="nav-link"{% endif %} href="/">Home</a>
+      </li>
+      <li class="nav-item">
+        <a {% if active_page == "page1" %} class="nav-link active"{% else %}class="nav-link"{% endif %} href="/page1">Page 1</a>
+      </li>
+	  {% if logged_in %}
+	    <li class="nav-item">
+        <a {% if active_page == "page2" %} class="nav-link active"{% else %}class="nav-link"{% endif %} href="/page2">Chat</a>
+		</li>
+      {% else %}
+	    
+	  {% endif %}
+	  </ul>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<ul class="nav flex-column">
+    {% if logged_in %}
+	    <li><span class="navbar-text user">Github userid: {{ session['user_data']['login']}}</span></li>
+	    <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
+	{% else %}
+	    <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+	{% endif %}

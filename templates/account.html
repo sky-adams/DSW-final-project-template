@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block title %}Page 1: Birthday{% endblock %}
+
+{% block content %}
+
+<html>
+ 
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css"> 
+
+  
+<h4>You have successfully created an account! Please verify the information below.</h4>
+ 
+<li> Profile for {{session["firstName"]}} {{session["lastName"]}} Birthday: {{session["birthday"]}} Favorite Color: {{session["favColor"]}} 
+Food: {{session["food"]}} Favorite Season: {{session["favSeason"]}} Favorite Holiday: {{session["favHoliday"]}}
+</ul>
+
+</html>
+
+{% endblock %}

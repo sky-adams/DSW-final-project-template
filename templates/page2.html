@@ -1,13 +1,23 @@
 {% extends "layout.html" %}
 
-{% set active_page = "page2" %}
-
-{% block title %}page2{% endblock %}
+{% block title %}Page 2: First Name{% endblock %}
 
 {% block content %}
 
-  <h1>This is Page 2</h1>
 
-  <p>Lorem ipsum</p>
+	<h1>Page 1: First name:</h1>
+	<a href="/page1">Start over</a>
+
+ <form action={{ url_for("renderPage3") }} method="POST">
+  First name:<br>
+  <input type="text" name="firstName">
+  <br>
+  
+   Last name:<br>
+  <input type="text" name="lastName">
+  <input type="submit" value="Submit">
+  <br>
+ </form> 
+
 
 {% endblock %}
