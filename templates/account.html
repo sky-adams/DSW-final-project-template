@@ -7,7 +7,7 @@
 {% block content %}
 	<div class="row">
 		{% if character_data %}
-		<div class="col-xl background marginAccount">	
+		<div class="col-xl background" id="marginAccountLeft">	
 				<div class="background">
 					<h1>Welcome, {{ character_data.GitHubID }}</h1>
 					<p>Character Name: {{ character_data.Name }}</p>
@@ -25,13 +25,7 @@
 
 					<p>Level: {{ character_data.Level }}</p>
 					<p>Dungeon Master:{{ character_data.DMaster }}</p>
-					{% if current_party != None %}
-						{% if is_DM == true %}
-						<form action={{ url_for("DeleteParty") }} method="POST" class="ms-4 input">
-							<button type="submit" class="btn btn-primary">Delete Party</button>
-						</form>
-						{% endif %}
-					{% endif %}
+
 					<br><br>
 					<h1>Edit Info:</h1>
 					<form action={{ url_for("renderUpdateCharacter") }} method="POST">
@@ -42,29 +36,50 @@
 				</div>
 		</div>
 
-			<div class="col-xl background marginAccount">
-				<h1>Current Party: {{ character_data.CurrentParty }}</h1>
-				{% if current_party != None %}
+        <div class="col-xl background" id="marginAccountRight">
+            <h1>Current Party: {{ character_data.CurrentParty }}</h1>
+            {% if current_party != None %}
 				<form action={{ url_for("leaveParty") }} method="POST" class="ms-4 input">
 					<button type="submit" class="btn btn-primary">Leave Party</button>
 				</form>
+				{% if is_DM == true %}
+					<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteParty">
+						Delete Party
+					</button>
+					<div class="modal fade" id="deleteParty">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h4 class="modal-title">Are you sure you want to delete your party?</h4>
+									<br>
+									<h5 class="modal-title">This cannot be undone and will delete all data associated with your party.</h5>
+								</div>
+								<div class="modal-body">
+									<form action={{ url_for("DeleteParty") }} method="POST" class="ms-4 input">
+										<button type="submit" class="btn btn-primary">Delete Party</button>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
 				{% endif %}
+            {% endif %}
 
-				<div class="p-5 m-5 accent1">
-					<h1>Create a new party.</h1>
-					<form action={{ url_for("renderCreateParty") }} method="POST">
-						<button type="submit" class="btn btn-primary">Create</button>
-					</form>
-				</div>
-				<div class="p-5  m-5 accent1">
-					<h1>Join a party.</h1>
-					<form action={{ url_for("renderPartySelection") }} method="POST">
-						<button type="submit" class="btn btn-primary">Join</button>
-					</form>
-				</div>
-			</div>
+            <div class="p-5 m-5 accent1">
+                <h1>Create a new party.</h1>
+                <form action={{ url_for("renderCreateParty") }} method="POST">
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </form>
+            </div>
+            <div class="p-5  m-5 accent1">
+                <h1>Join a party.</h1>
+                <form action={{ url_for("renderPartySelection") }} method="POST">
+                    <button type="submit" class="btn btn-primary">Join</button>
+                </form>
+            </div>
+        </div>
 		{% else %}
-		<div class="col-xl background marginAccount">	
+		<div class="col-xl background" id="marginAccountLeft">	
 			<form action={{ url_for("renderAccountCreation") }} method="POST">
 				<label for="name">Name Of Your Character:</label>
 				<input type="text" id="name" name="name" required><br><br>

@@ -469,6 +469,7 @@ def createCharacterData(gitHubID, Name, Race, Class, Strength, Dexterity, Consti
     }
     characters.insert_one(doc)
     characterData = doc
+    print("CREATED A CHARACTER!!!")
     return(characterData)
     
 def loadCharacterData(gitHubID):
