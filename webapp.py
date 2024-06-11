@@ -41,8 +41,8 @@ def inject_logged_in():
     return {"logged_in":is_logged_in}
 
 @app.route('/')
-def home():
-    return render_template('home.html')
+def quizHome():
+    return render_template('quizHome.html')
 
 #redirect to GitHub's OAuth page and confirm callback URL
 @app.route('/login')
