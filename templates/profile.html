@@ -4,13 +4,13 @@
 
 {% block content %}
 
-
 <li> Profile for {{session["firstName"]}} {{session["lastName"]}} </ul>
-<li>Interests {{"interests"]}} </ul>
+<li>Hobbies: {{session["hobbies"]}}
+<li>Favorite Season: {{session["favSeason"]}} </ul>
+<li>Interests {{session["interests"]}} </ul>
 <li> Education {{session["education"]}} </ul>
-<li> Professional Experience {{session["professional"]}} </ul>
+<li> Professional Experience {{session["experience"]}} </ul>
 
-<li>Vist your profile</ul>
 <link href="/logout">
 
-{% end block %}
+{% endblock %}

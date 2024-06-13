@@ -4,11 +4,11 @@
 
 {% block content %}
 
-
-  <h1>Informational Form</h1>
-
-<p>Please list your hobbies:</p>
-
-<form action={{ url_for("renderForm2Page4") }} method="POST">
+ <form action={{ url_for("renderform2page4") }} method="POST">
+  Hobbies:<br>
+  <input type="text" name="hobbies">
+    <input type="submit" value="Submit">
+  <br>
+</form> 
 
 {% endblock %}

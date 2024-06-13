@@ -4,12 +4,11 @@
 
 {% block content %}
 
-
-  <h1>Informational Form</h1>
-
-<p>Education:
-</p>
-
-  <form action={{ url_for("renderForm2Page5") }} method="POST">
+ <form action={{ url_for("renderform2page5") }} method="POST">
+  Education:<br>
+  <input type="text" name="education">
+	<input type="submit" value="Submit">
+  <br>
+ </form>
 
 {% endblock %}

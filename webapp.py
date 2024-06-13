@@ -3,6 +3,7 @@ from flask import Flask, url_for, render_template, request
 from flask import redirect
 from flask import session
 from flask_oauthlib.client import OAuth
+import pymongo
 
 app = Flask(__name__)
 
@@ -30,6 +31,20 @@ github = oauth.remote_app(
     access_token_url='https://github.com/login/oauth/access_token',  
     authorize_url='https://github.com/login/oauth/authorize' #URL for github's OAuth login
 )
+
+connection_string = os.environ["MONGO_CONNECTION_STRING"]
+db_name = os.environ["MONGO_DBNAME"]
+    
+client = pymongo.MongoClient(connection_string)
+db = client[db_name]
+collection = db['users'] #1. put the name of your collection in the quotes
+    
+    # Send a ping to confirm a successful connection
+try:
+    client.admin.command('ping')
+    print("Pinged your deployment. You successfully connected to MongoDB!")
+except Exception as e:
+    print(e)
 
 #context processors run before templates are rendered and add variable(s) to the template's context
 #context processors must return a dictionary 
@@ -62,8 +77,26 @@ def authorized():
         message = 'Access denied: reason=' + request.args['error'] + ' error=' + request.args['error_description'] + ' full=' + pprint.pformat(request.args)      
     else:
         try:
-            session['github_token'] = (resp['access_token'], '') #save the token to prove that the user logged in
-            session['user_data']=github.get('user').data
+            if "birthday" not in session:
+                session['github_token'] = (resp['access_token'], '') #save the token to prove that the user logged in
+                session['user_data']=github.get('user').data
+                doc = collection.find_one({'ID':session['user_data']['login']})
+                print(doc)
+                
+                for key in doc:
+                    if key != "_id":
+                        session[key] = doc[key] 
+
+            else:
+                copy = {}
+                for key in session:
+                    copy[key] = session[key]
+                session['github_token'] = (resp['access_token'], '') #save the token to prove that the user logged in
+                session['user_data']=github.get('user').data
+                copy['ID'] = session['user_data']['login']
+                print(copy)
+                collection.insert_one(copy)
+            
             #pprint.pprint(vars(github['/email']))
             #pprint.pprint(vars(github['api/2/accounts/profile/']))
             message='You were successfully logged in as ' + session['user_data']['login'] + '.'
@@ -95,7 +128,7 @@ def renderPage2():
     return render_template('page2.html')
 
 @app.route('/form2page2',methods=['GET','POST'])
-def renderFormPage2():
+def renderformPage2():
     if "firstName" not in session:
         session["firstName"]=request.form['firstName']
     if "lastName" not in session:
@@ -111,7 +144,7 @@ def renderPage3():
     return render_template('page3.html')
     
 @app.route('/form2page3',methods=['GET','POST'])
-def renderForm2Page3():
+def renderform2page3():
     if "interests" not in session:
         session["interests"]=request.form['interests']
     return render_template('form2page3.html')
@@ -123,72 +156,67 @@ def renderPage4():
     return render_template('page4.html')
     
 @app.route('/form2page4',methods=['GET','POST'])
-def renderForm2page4():
-    if "education" not in session:
-        session["education"]=request.form['education']
+def renderform2page4():
+    if "hobbies" not in session:
+        session["hobbies"]=request.form['hobbies']
     return render_template('form2page4.html')
 
 @app.route('/page5',methods=['GET','POST'])
-def renderPage5():
+def renderpage5():
     if "favColor" not in session:
         session["favColor"]=request.form['favColor']
     return render_template('page5.html')
     
 @app.route('/form2page5',methods=['GET','POST'])
-def renderForm2Page5():
-    if "professional" not in session:
-            session["professional"]=request.form['professional']
+def renderform2page5():
+    if "education" not in session:
+            session["education"]=request.form['education']
     return render_template('form2page5.html')
 
 @app.route('/page6',methods=['GET','POST'])
-def renderPage6():
+def renderpage6():
     if "food" not in session:
         session["food"]=request.form['food']
     return render_template('page6.html')
-    
-@app.route('/form2page6',methods=['GET','POST'])
-def renderForm2Page6():
-    if "favSeason" not in session:
-        session["favSeason"]=request.form['favSeason']
-    return render_template('form2page6.html')
 
 @app.route('/page7',methods=['GET','POST'])
-def renderPage7():
+def renderpage7():
     if "favSeason" not in session:
         session["favSeason"]=request.form['favSeason']
     return render_template('page7.html')
-
-@app.route('/form2page7',methods=['GET','POST'])
-def renderForm2Page7():
-    if "age" not in session:
-        session["age"]=request.form['age']
-    return render_template('form2page7.html')
     
 @app.route('/page8',methods=['GET','POST'])
-def renderPage8():
+def renderpage8():
     if "favHoliday" not in session:
         session["favHoliday"]=request.form['favHoliday']
     return render_template('page8.html')
     
-@app.route('/form2page8',methods=['GET','POST'])
-def renderForm2Page8():
-    if "" not in session:
-        session[""]=request.form['']
-    return render_template('form2page8.html')
-    
 @app.route('/page9',methods=['GET','POST'])
 def renderPage9():
-    if "favHoliday" not in session:
-        session["favHoliday"]=request.form['favHoliday']
+    if "birthday" not in session:
+        session["birthday"]=request.form['birthday']
     return render_template('page9.html')
     
 @app.route('/quizFinal',methods=['GET','POST'])
 def renderQuizFinal():
-    if "future" not in session:
-        session["future"]=request.form['professional']
-    if "final" not in session:
-        session["final"]=request.form['final']
+    if "education" not in session:
+        session["education"]=request.form['education']
     return render_template('quizFinal.html')
+    
+@app.route('/quizFinal1',methods=['GET','POST'])
+def renderQuizFinal1():
+    if "birthday" not in session:
+        session["birthday"]=request.form['birthday']
+    return render_template('quizFinal.html')
+    
+@app.route('/profile',methods=['GET','POST'])
+def renderprofile():
+    return render_template('profile.html')
+ 
+@github.tokengetter
+def get_github_oauth_token():
+    return session['github_token']
+
  
 if __name__=="__main__":
     app.run(debug=True)

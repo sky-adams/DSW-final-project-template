@@ -7,9 +7,15 @@
 
   <h1>Informational Form</h1>
 
-<p>First name: </p>
-<p>Last name: </p>
-
-  <form action={{ url_for("renderForm2Page3") }} method="POST">
+ <form action={{ url_for("renderform2page3") }} method="POST">
+  First name:<br>
+  <input type="text" name="firstName">
+  <br>
+  
+   Last name:<br>
+  <input type="text" name="lastName">
+  <input type="submit" value="Submit">
+  <br>
+ </form> 
 
 {% endblock %}
